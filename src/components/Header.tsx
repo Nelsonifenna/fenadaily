@@ -34,7 +34,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl">
-      {/* ── Primary bar: Logo | Home About Contact | WP Admin ── */}
+      {/* ── Primary bar ── */}
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 lg:px-8">
           {/* Brand */}
@@ -64,15 +64,8 @@ export function Header() {
             </ul>
           </nav>
 
-          {/* Desktop WP Admin */}
-          <a
-            href="https://fenadaily.com/wp-admin"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden rounded-full border border-amber-400/40 bg-amber-400/10 px-3.5 py-1.5 text-xs font-semibold text-amber-200 hover:bg-amber-400/20 transition-colors md:block"
-          >
-            WP Admin ↗
-          </a>
+          {/* Spacer keeps brand left-aligned with nav centred */}
+          <div className="hidden w-24 md:block" />
 
           {/* Mobile hamburger */}
           <button
@@ -88,7 +81,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* ── Category bar: AI | Football | Crypto | Business | Technology | Personal Growth ── */}
+      {/* ── Category / topics bar ── */}
       <div className="border-b border-white/[0.06] bg-slate-900/60">
         <div className="mx-auto hidden max-w-7xl items-center gap-1 overflow-x-auto px-4 py-2 scrollbar-none md:flex lg:px-8">
           <span className="mr-2 shrink-0 text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-medium">
@@ -110,7 +103,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* ── Mobile menu (full-screen dropdown) ── */}
+      {/* ── Mobile menu ── */}
       {menuOpen && (
         <div className="border-b border-white/10 bg-slate-950 md:hidden">
           {/* Pages */}
@@ -139,7 +132,7 @@ export function Header() {
           <div className="mx-4 border-t border-white/8" />
 
           {/* Categories */}
-          <div className="px-4 pb-4 pt-3">
+          <div className="px-4 pb-5 pt-3">
             <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Topics</p>
             <div className="flex flex-wrap gap-2">
               {categoryLinks.map(({ label, href }) => (
@@ -157,18 +150,6 @@ export function Header() {
                 </Link>
               ))}
             </div>
-          </div>
-
-          {/* WP Admin */}
-          <div className="border-t border-white/8 px-4 py-3">
-            <a
-              href="https://fenadaily.com/wp-admin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-full border border-amber-400/40 bg-amber-400/10 py-2.5 text-center text-sm font-semibold text-amber-200"
-            >
-              WP Admin ↗
-            </a>
           </div>
         </div>
       )}

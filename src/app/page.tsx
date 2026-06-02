@@ -139,13 +139,7 @@ export default async function Home() {
           </div>
         ) : (
           <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-6 text-center sm:rounded-[28px] sm:p-8">
-            <p className="text-zinc-400">
-              No stories yet —{" "}
-              <a href="https://fenadaily.com/wp-admin" className="text-amber-300 hover:text-amber-200">
-                publish on WordPress
-              </a>{" "}
-              to populate this section.
-            </p>
+            <p className="text-zinc-400">No articles available yet. Check back soon.</p>
           </div>
         )}
       </section>

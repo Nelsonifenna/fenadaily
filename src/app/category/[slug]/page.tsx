@@ -97,14 +97,7 @@ export default async function CategoryPage({
             <p className="text-3xl">✦</p>
             <h2 className="mt-4 text-lg font-semibold text-white sm:text-xl">Coming soon</h2>
             <p className="mx-auto mt-3 max-w-sm text-sm text-zinc-400">
-              {label} coverage is launching on Fena Daily.{" "}
-              <a
-                href="https://fenadaily.com/wp-admin"
-                className="text-amber-300 hover:text-amber-200 transition-colors"
-              >
-                Publish to WordPress
-              </a>{" "}
-              to start populating this category.
+              {label} coverage is coming to Fena Daily. Check back soon.
             </p>
             <Link
               href="/"
