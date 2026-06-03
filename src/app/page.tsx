@@ -201,22 +201,14 @@ export default async function Home() {
               Stay informed. Stay ahead.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-base">
-              Get the day&apos;s top stories across AI, Football, Crypto, and Business — delivered in one daily brief.
+              Get the day&apos;s top stories across AI, Football, Crypto, and Business — delivered directly to your inbox.
             </p>
-            <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="w-full flex-1 rounded-full border border-white/15 bg-white/8 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/50 focus:outline-none focus:ring-1 focus:ring-amber-400/30 sm:px-5"
-              />
-              <button
-                type="button"
-                className="w-full shrink-0 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-300 transition-colors sm:w-auto"
-              >
-                Subscribe free
-              </button>
-            </div>
-            <p className="mt-3 text-xs text-zinc-500">No spam. Unsubscribe anytime.</p>
+            <a
+              href="mailto:fenadaily@gmail.com?subject=Newsletter%20Subscription"
+              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-300 transition-colors sm:mt-6"
+            >
+              Subscribe
+            </a>
           </div>
           <div
             aria-hidden

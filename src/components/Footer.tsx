@@ -67,16 +67,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-zinc-500 md:flex-row md:items-center">
+        <div className="mt-10 border-t border-white/10 pt-6 text-xs text-zinc-500">
           <p>© {new Date().getFullYear()} Fena Daily. All rights reserved.</p>
-          <a
-            href="https://fenadaily.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-amber-300 transition-colors"
-          >
-            fenadaily.com ↗
-          </a>
         </div>
       </div>
     </footer>
