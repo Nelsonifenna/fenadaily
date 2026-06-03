@@ -13,6 +13,8 @@ const categoryLinks = [
   { label: "Business", href: "/category/business" },
   { label: "Technology", href: "/category/technology" },
   { label: "Personal Growth", href: "/category/personal-growth" },
+  { label: "Music", href: "/category/music" },
+  { label: "Politics", href: "/category/politics" },
 ];
 
 export function Footer() {
@@ -24,7 +26,7 @@ export function Footer() {
           <div>
             <p className="text-xl font-bold text-white">Fena Daily</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-400">
-              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.
+              Independent coverage of AI, Football, Crypto, Business, Technology, Personal Growth, Music, and Politics.
             </p>
           </div>
 

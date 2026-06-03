@@ -201,6 +201,8 @@ const NAV_CATEGORIES: { label: string; slug: string }[] = [
   { label: "Business",        slug: "business" },
   { label: "Technology",      slug: "technology" },
   { label: "Personal Growth", slug: "personal-growth" },
+  { label: "Music",           slug: "music" },
+  { label: "Politics",        slug: "politics" },
 ];
 
 export async function getCategoryHighlights(): Promise<CategoryHighlight[]> {

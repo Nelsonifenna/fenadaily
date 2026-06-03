@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArticleCard } from "@/components/ArticleCard";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import {
   getFeaturedStory,
   getLatestPosts,
@@ -201,14 +202,9 @@ export default async function Home() {
               Stay informed. Stay ahead.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-base">
-              Get the day&apos;s top stories across AI, Football, Crypto, and Business — delivered directly to your inbox.
+              Get the day&apos;s top stories across AI, Football, Crypto, Business, Music, and Politics — delivered directly to your inbox.
             </p>
-            <a
-              href="mailto:fenadaily@gmail.com?subject=Newsletter%20Subscription"
-              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-300 transition-colors sm:mt-6"
-            >
-              Subscribe
-            </a>
+            <NewsletterForm />
           </div>
           <div
             aria-hidden

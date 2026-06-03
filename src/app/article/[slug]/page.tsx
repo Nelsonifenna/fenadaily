@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { ArticleCard } from "@/components/ArticleCard";
+import { ShareSection } from "@/components/ShareSection";
 import { getArticleBySlug, getLatestPosts } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
@@ -115,6 +116,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <p>Content not available.</p>
             )}
           </div>
+
+          <ShareSection title={article.title} url={`${SITE_URL}/article/${slug}`} />
 
         </article>
 

@@ -10,6 +10,8 @@ const CATEGORY_META: Record<string, { label: string; description: string }> = {
   business:          { label: "Business",        description: "Entrepreneurship, strategy, markets, and business growth." },
   technology:        { label: "Technology",      description: "Product launches, software, platforms, and the digital world." },
   "personal-growth": { label: "Personal Growth", description: "Mindset, habits, productivity, and becoming your best self." },
+  music:             { label: "Music",           description: "New releases, artist spotlights, industry news, and the sounds defining our era." },
+  politics:          { label: "Politics",        description: "Policy, elections, global affairs, and the decisions that shape society." },
 };
 
 function getCategoryLabel(slug: string): string {

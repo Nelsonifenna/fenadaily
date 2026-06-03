@@ -17,6 +17,8 @@ const categoryLinks = [
   { label: "Business", href: "/category/business" },
   { label: "Technology", href: "/category/technology" },
   { label: "Personal Growth", href: "/category/personal-growth" },
+  { label: "Music", href: "/category/music" },
+  { label: "Politics", href: "/category/politics" },
 ];
 
 export function Header() {
