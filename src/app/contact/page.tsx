@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getContactPage } from "@/lib/content";
+import { ContactForm } from "./ContactForm";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC = "Get in touch with Fena Daily — for inquiries, collaborations, or suggestions.";
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 export default async function ContactPage() {
   const page = await getContactPage();
 
+  // Extract email address from WordPress contact page content
   const emailMatch = page?.content?.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i);
   const email = emailMatch?.[0] ?? null;
 
@@ -51,59 +53,8 @@ export default async function ContactPage() {
             </h1>
           )}
 
-          {/* Email CTA */}
-          {email && (
-            <div className="mt-8 rounded-xl border border-amber-400/20 bg-amber-400/10 p-5 sm:rounded-2xl sm:p-6">
-              <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Email us</p>
-              <a
-                href={`mailto:${email}`}
-                className="mt-2 block text-lg font-semibold text-white hover:text-amber-300 transition-colors sm:text-xl"
-              >
-                {email}
-              </a>
-              <p className="mt-2 text-sm text-zinc-400">
-                We reply to all messages within 48 hours.
-              </p>
-            </div>
-          )}
-
-          {/* Contact form */}
-          <form
-            className="mt-8 space-y-4 sm:space-y-5"
-            action={`mailto:${email ?? "fenadaily@gmail.com"}`}
-            method="get"
-          >
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-300" htmlFor="name">
-                Name
-              </label>
-              <input
-                id="name"
-                name="subject"
-                type="text"
-                placeholder="Your name"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/40"
-              />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-300" htmlFor="message">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="body"
-                rows={5}
-                placeholder="Your message..."
-                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/40"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full rounded-full bg-amber-400 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-300 transition-colors sm:w-auto"
-            >
-              Send message
-            </button>
-          </form>
+          {/* Contact form — server-action powered, email delivered via Resend */}
+          <ContactForm email={email} />
         </div>
       </div>
     </main>
