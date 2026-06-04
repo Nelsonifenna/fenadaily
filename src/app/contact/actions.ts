@@ -7,7 +7,8 @@ export type ContactState =
   | { status: "success" }
   | { status: "error"; message: string };
 
-const RECIPIENT = "fenadaily@gmail.com";
+const RECIPIENT   = "fenadaily@gmail.com";
+const FROM_EMAIL  = process.env.RESEND_FROM_EMAIL ?? "Fena Daily <onboarding@resend.dev>";
 
 export async function submitContact(
   _prev: ContactState,
@@ -41,9 +42,7 @@ export async function submitContact(
   try {
     const resend = new Resend(apiKey);
     await resend.emails.send({
-      // Update `from` to a verified domain address once you add fenadaily.com to Resend.
-      // Until then, Resend allows sending from onboarding@resend.dev in test mode.
-      from: "Fena Daily <onboarding@resend.dev>",
+      from: FROM_EMAIL,
       to:   RECIPIENT,
       replyTo: email,
       subject: `Message from ${name} via Fena Daily`,

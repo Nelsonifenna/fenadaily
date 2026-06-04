@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { generateUnsubscribeToken } from "@/lib/unsubscribe";
 
 export type NewsletterState =
   | { status: "idle" }
@@ -9,9 +10,8 @@ export type NewsletterState =
 
 const OWNER_EMAIL = "fenadaily@gmail.com";
 const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Set RESEND_FROM_EMAIL in Vercel once your domain is verified in Resend.
-// Until then the default Resend address is used automatically.
 const FROM_EMAIL  = process.env.RESEND_FROM_EMAIL ?? "Fena Daily <onboarding@resend.dev>";
+const SITE_URL    = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 
 export async function subscribeNewsletter(
   _prev: NewsletterState,
@@ -28,7 +28,6 @@ export async function subscribeNewsletter(
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    // Key not yet configured — log server-side, still acknowledge the user
     console.warn(`[newsletter] RESEND_API_KEY not set. Subscriber: ${email}`);
     return { status: "success" };
   }
@@ -36,21 +35,30 @@ export async function subscribeNewsletter(
   try {
     const resend = new Resend(apiKey);
 
-    // Persist to Resend Audience when configured (set RESEND_AUDIENCE_ID in .env.local)
+    // Persist to Resend Audience
     const audienceId = process.env.RESEND_AUDIENCE_ID;
     if (audienceId) {
       try {
         await resend.contacts.create({ email, audienceId, unsubscribed: false });
       } catch {
-        // Contact may already exist; non-fatal — proceed with welcome email
+        // Contact may already exist — non-fatal
       }
     }
+
+    // Build one-click unsubscribe URL
+    const token          = generateUnsubscribeToken(email);
+    const unsubscribeUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
 
     // Welcome email to subscriber
     await resend.emails.send({
       from:    FROM_EMAIL,
       to:      email,
       subject: "You're subscribed to Fena Daily",
+      headers: {
+        // RFC 8058 one-click unsubscribe — required by Gmail/Yahoo for bulk senders
+        "List-Unsubscribe":      `<${unsubscribeUrl}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
       text: [
         "Welcome to Fena Daily!",
         "",
@@ -59,6 +67,9 @@ export async function subscribeNewsletter(
         "delivered directly to your inbox.",
         "",
         "— The Fena Daily team",
+        "",
+        "─────────────────────────────",
+        `To unsubscribe: ${unsubscribeUrl}`,
       ].join("\n"),
     });
 

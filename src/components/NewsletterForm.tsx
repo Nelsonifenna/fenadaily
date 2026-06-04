@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useId } from "react";
 import { subscribeNewsletter, type NewsletterState } from "@/app/newsletter/actions";
 
 const initial: NewsletterState = { status: "idle" };
 
 export function NewsletterForm({ stacked = false }: { stacked?: boolean }) {
   const [state, action, pending] = useActionState(subscribeNewsletter, initial);
+  const uid = useId();
 
   if (state.status === "success") {
     return (
@@ -41,11 +42,11 @@ export function NewsletterForm({ stacked = false }: { stacked?: boolean }) {
       )}
 
       <div className={`flex flex-col gap-3 ${stacked ? "" : "sm:flex-row sm:items-center"}`}>
-        <label htmlFor="newsletter-email" className="sr-only">
+        <label htmlFor={`${uid}-email`} className="sr-only">
           Email address
         </label>
         <input
-          id="newsletter-email"
+          id={`${uid}-email`}
           name="email"
           type="email"
           autoComplete="email"
