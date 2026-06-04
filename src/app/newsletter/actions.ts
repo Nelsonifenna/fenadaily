@@ -14,6 +14,25 @@ const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const FROM_EMAIL  = process.env.RESEND_FROM_EMAIL ?? "Fena Daily <onboarding@resend.dev>";
 const SITE_URL    = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 
+type ResendContact = { id: string; email: string; unsubscribed: boolean };
+
+async function isAlreadySubscribed(
+  resend: Resend,
+  audienceId: string,
+  email: string
+): Promise<boolean> {
+  try {
+    const result = await resend.contacts.list({ audienceId });
+    const rows: ResendContact[] =
+      (result as { data?: { data?: ResendContact[] } }).data?.data ?? [];
+    return rows.some((c) => c.email?.toLowerCase() === email.toLowerCase());
+  } catch {
+    // If the check fails (network, etc.) we let the flow continue rather
+    // than blocking a genuine new subscriber.
+    return false;
+  }
+}
+
 export async function subscribeNewsletter(
   _prev: NewsletterState,
   formData: FormData
@@ -34,15 +53,24 @@ export async function subscribeNewsletter(
   }
 
   try {
-    const resend = new Resend(apiKey);
-
-    // Persist to Resend Audience
+    const resend    = new Resend(apiKey);
     const audienceId = process.env.RESEND_AUDIENCE_ID;
+
     if (audienceId) {
+      // ── Duplicate gate ──────────────────────────────────────────────────────
+      // Query the audience before sending any emails. If the address is already
+      // there (active or unsubscribed), return success immediately so the UI
+      // shows the confirmation but no notification or welcome email is sent.
+      const duplicate = await isAlreadySubscribed(resend, audienceId, email);
+      if (duplicate) {
+        return { status: "success" };
+      }
+
+      // New subscriber — persist to audience
       try {
         await resend.contacts.create({ email, audienceId, unsubscribed: false });
       } catch {
-        // Contact may already exist — non-fatal
+        // Non-fatal — continue and send emails even if contact creation fails
       }
     }
 
@@ -50,10 +78,8 @@ export async function subscribeNewsletter(
     const token          = generateUnsubscribeToken(email);
     const unsubscribeUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
 
-    // Build HTML + text welcome email
-    const { html, text } = buildWelcomeEmail({ siteUrl: SITE_URL, unsubscribeUrl });
-
     // Welcome email to subscriber
+    const { html, text } = buildWelcomeEmail({ siteUrl: SITE_URL, unsubscribeUrl });
     await resend.emails.send({
       from:    FROM_EMAIL,
       to:      email,
@@ -66,7 +92,7 @@ export async function subscribeNewsletter(
       text,
     });
 
-    // Owner notification (plain text only)
+    // Owner notification — only reaches here for genuinely new subscribers
     await resend.emails.send({
       from:    FROM_EMAIL,
       to:      OWNER_EMAIL,
