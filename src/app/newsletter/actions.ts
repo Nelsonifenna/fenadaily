@@ -9,6 +9,9 @@ export type NewsletterState =
 
 const OWNER_EMAIL = "fenadaily@gmail.com";
 const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Set RESEND_FROM_EMAIL in Vercel once your domain is verified in Resend.
+// Until then the default Resend address is used automatically.
+const FROM_EMAIL  = process.env.RESEND_FROM_EMAIL ?? "Fena Daily <onboarding@resend.dev>";
 
 export async function subscribeNewsletter(
   _prev: NewsletterState,
@@ -45,7 +48,7 @@ export async function subscribeNewsletter(
 
     // Welcome email to subscriber
     await resend.emails.send({
-      from:    "Fena Daily <onboarding@resend.dev>",
+      from:    FROM_EMAIL,
       to:      email,
       subject: "You're subscribed to Fena Daily",
       text: [
@@ -61,7 +64,7 @@ export async function subscribeNewsletter(
 
     // Owner notification
     await resend.emails.send({
-      from:    "Fena Daily <onboarding@resend.dev>",
+      from:    FROM_EMAIL,
       to:      OWNER_EMAIL,
       subject: "New Newsletter Subscriber",
       text:    `New subscriber: ${email}`,
