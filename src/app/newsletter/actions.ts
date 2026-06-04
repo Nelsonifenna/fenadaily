@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { generateUnsubscribeToken } from "@/lib/unsubscribe";
+import { buildWelcomeEmail } from "@/lib/welcome-email";
 
 export type NewsletterState =
   | { status: "idle" }
@@ -45,35 +46,27 @@ export async function subscribeNewsletter(
       }
     }
 
-    // Build one-click unsubscribe URL
+    // Build signed unsubscribe URL
     const token          = generateUnsubscribeToken(email);
     const unsubscribeUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+
+    // Build HTML + text welcome email
+    const { html, text } = buildWelcomeEmail({ siteUrl: SITE_URL, unsubscribeUrl });
 
     // Welcome email to subscriber
     await resend.emails.send({
       from:    FROM_EMAIL,
       to:      email,
-      subject: "You're subscribed to Fena Daily",
+      subject: "Welcome to Fena Daily ✦",
       headers: {
-        // RFC 8058 one-click unsubscribe — required by Gmail/Yahoo for bulk senders
         "List-Unsubscribe":      `<${unsubscribeUrl}>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
       },
-      text: [
-        "Welcome to Fena Daily!",
-        "",
-        "Thank you for subscribing. You'll receive our top stories across",
-        "AI, Football, Crypto, Business, Technology, Music, and Politics —",
-        "delivered directly to your inbox.",
-        "",
-        "— The Fena Daily team",
-        "",
-        "─────────────────────────────",
-        `To unsubscribe: ${unsubscribeUrl}`,
-      ].join("\n"),
+      html,
+      text,
     });
 
-    // Owner notification
+    // Owner notification (plain text only)
     await resend.emails.send({
       from:    FROM_EMAIL,
       to:      OWNER_EMAIL,
