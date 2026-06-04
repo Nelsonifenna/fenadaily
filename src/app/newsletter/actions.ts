@@ -36,7 +36,11 @@ export async function subscribeNewsletter(
     // Persist to Resend Audience when configured (set RESEND_AUDIENCE_ID in .env.local)
     const audienceId = process.env.RESEND_AUDIENCE_ID;
     if (audienceId) {
-      await resend.contacts.create({ email, audienceId, unsubscribed: false });
+      try {
+        await resend.contacts.create({ email, audienceId, unsubscribed: false });
+      } catch {
+        // Contact may already exist; non-fatal — proceed with welcome email
+      }
     }
 
     // Welcome email to subscriber

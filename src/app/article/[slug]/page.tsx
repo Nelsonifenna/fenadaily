@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ShareSection } from "@/components/ShareSection";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { getArticleBySlug, getLatestPosts } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
@@ -138,6 +139,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Author</p>
             <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">{article.author}</h3>
             <p className="mt-2 text-sm text-zinc-300">Published on {article.publishedAt}</p>
+          </section>
+
+          <section className="rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6">
+            <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Newsletter</p>
+            <h3 className="mt-2 text-base font-semibold text-white">Stay informed. Stay ahead.</h3>
+            <p className="mt-1.5 text-sm text-zinc-400">
+              Top stories delivered to your inbox — free, no spam.
+            </p>
+            <NewsletterForm stacked />
           </section>
         </aside>
       </div>

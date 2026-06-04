@@ -5,7 +5,7 @@ import { subscribeNewsletter, type NewsletterState } from "@/app/newsletter/acti
 
 const initial: NewsletterState = { status: "idle" };
 
-export function NewsletterForm() {
+export function NewsletterForm({ stacked = false }: { stacked?: boolean }) {
   const [state, action, pending] = useActionState(subscribeNewsletter, initial);
 
   if (state.status === "success") {
@@ -40,7 +40,7 @@ export function NewsletterForm() {
         </p>
       )}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className={`flex flex-col gap-3 ${stacked ? "" : "sm:flex-row sm:items-center"}`}>
         <label htmlFor="newsletter-email" className="sr-only">
           Email address
         </label>
@@ -53,7 +53,7 @@ export function NewsletterForm() {
           maxLength={254}
           placeholder="Enter your email address"
           disabled={pending}
-          className="w-full rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/40 disabled:opacity-50 sm:max-w-xs"
+          className={`w-full rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/40 disabled:opacity-50${stacked ? "" : " sm:max-w-xs"}`}
         />
         <button
           type="submit"

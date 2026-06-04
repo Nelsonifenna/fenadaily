@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 const primaryLinks = [
   { label: "Home", href: "/" },
@@ -24,6 +25,36 @@ const categoryLinks = [
 export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close the subscribe dropdown on route change
+  useEffect(() => {
+    setSubscribeOpen(false);
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!subscribeOpen) return;
+    function handle(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setSubscribeOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [subscribeOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!subscribeOpen) return;
+    function handle(e: KeyboardEvent) {
+      if (e.key === "Escape") setSubscribeOpen(false);
+    }
+    document.addEventListener("keydown", handle);
+    return () => document.removeEventListener("keydown", handle);
+  }, [subscribeOpen]);
 
   function isActivePrimary(href: string) {
     if (href === "/") return pathname === "/";
@@ -66,8 +97,37 @@ export function Header() {
             </ul>
           </nav>
 
-          {/* Spacer keeps brand left-aligned with nav centred */}
-          <div className="hidden w-24 md:block" />
+          {/* Desktop: Subscribe CTA with inline dropdown */}
+          <div className="relative hidden md:block" ref={dropdownRef}>
+            <button
+              onClick={() => setSubscribeOpen((o) => !o)}
+              aria-expanded={subscribeOpen}
+              aria-haspopup="dialog"
+              className="rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950 transition-colors hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              Subscribe
+            </button>
+
+            {subscribeOpen && (
+              <div
+                role="dialog"
+                aria-label="Subscribe to newsletter"
+                aria-modal="false"
+                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900/98 p-5 shadow-2xl shadow-black/60 backdrop-blur-md"
+              >
+                {/* Caret */}
+                <div
+                  aria-hidden
+                  className="absolute -top-1.5 right-4 h-3 w-3 rotate-45 rounded-sm border-l border-t border-white/10 bg-slate-900"
+                />
+                <p className="text-sm font-semibold text-white">Stay informed. Stay ahead.</p>
+                <p className="mt-1 text-xs text-zinc-400">
+                  Top stories across AI, Football, Crypto and more — straight to your inbox.
+                </p>
+                <NewsletterForm stacked />
+              </div>
+            )}
+          </div>
 
           {/* Mobile hamburger */}
           <button
@@ -134,7 +194,7 @@ export function Header() {
           <div className="mx-4 border-t border-white/8" />
 
           {/* Categories */}
-          <div className="px-4 pb-5 pt-3">
+          <div className="px-4 pb-4 pt-3">
             <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Topics</p>
             <div className="flex flex-wrap gap-2">
               {categoryLinks.map(({ label, href }) => (
@@ -152,6 +212,16 @@ export function Header() {
                 </Link>
               ))}
             </div>
+          </div>
+
+          {/* Divider */}
+          <div className="mx-4 border-t border-white/8" />
+
+          {/* Newsletter */}
+          <div className="px-4 pb-6 pt-4">
+            <p className="mb-1 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Newsletter</p>
+            <p className="mb-3 text-sm font-medium text-white">Stay informed. Stay ahead.</p>
+            <NewsletterForm stacked />
           </div>
         </div>
       )}
