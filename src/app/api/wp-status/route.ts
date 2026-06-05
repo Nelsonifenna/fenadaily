@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const wordpressUrl = process.env.WORDPRESS_URL ?? "(not set)";
+  const wordpressUrl = (process.env.WORDPRESS_URL ?? "(not set)").replace(/\/+$/, "");
   const apiBase     = `${wordpressUrl}/wp-json/wp/v2`;
   const testUrl     = `${apiBase}/posts?per_page=1`;
 
