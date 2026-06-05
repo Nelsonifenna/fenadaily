@@ -7,7 +7,7 @@
  * separate URL — e.g. cms.fenadaily.com or the hosting provider's direct URL.
  */
 
-const WORDPRESS_URL = process.env.WORDPRESS_URL ?? "https://fenadaily.com";
+const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
 
 const REVALIDATE_POSTS = 1800;
