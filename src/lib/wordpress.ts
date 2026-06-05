@@ -7,8 +7,39 @@
  * separate URL — e.g. cms.fenadaily.com or the hosting provider's direct URL.
  */
 
-const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://fenadaily.com").replace(/\/+$/, "");
+const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://cms.fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
+
+// When a WordPress site is copied to a new domain (e.g. fenadaily.com →
+// cms.fenadaily.com via Hostinger's Copy Website), the database retains the
+// original siteurl. Media source_url values therefore still reference the old
+// domain. These hosts point to the Next.js frontend on Vercel — not to the
+// WordPress file system — so image requests against them return 404.
+// normalizeMediaUrl / normalizeContentHtml rewrite those stale references to
+// the active CMS hostname so images resolve correctly without requiring a
+// WordPress database search-replace.
+const CMS_HOSTNAME    = new URL(WORDPRESS_URL).hostname;
+const LEGACY_WP_HOSTS = ["fenadaily.com", "www.fenadaily.com"];
+
+function normalizeMediaUrl(url: string): string {
+  if (!url) return url;
+  try {
+    const parsed = new URL(url);
+    if (LEGACY_WP_HOSTS.includes(parsed.hostname) && parsed.pathname.startsWith("/wp-content/")) {
+      return url.replace(`//${parsed.hostname}/`, `//${CMS_HOSTNAME}/`);
+    }
+  } catch { /* not a valid URL */ }
+  return url;
+}
+
+function normalizeContentHtml(html: string): string {
+  if (!html) return html;
+  let out = html;
+  for (const host of LEGACY_WP_HOSTS) {
+    out = out.replaceAll(`https://${host}/wp-content/`, `https://${CMS_HOSTNAME}/wp-content/`);
+  }
+  return out;
+}
 
 const REVALIDATE_POSTS = 1800;
 const REVALIDATE_PAGES = 3600;
@@ -104,8 +135,8 @@ function mapPost(post: WPRawPost) {
     }),
     featured:  post.featured ?? false,
     trending:  post.sticky   ?? false,
-    image:     post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "",
-    content:   post.content?.rendered ?? "",
+    image:     normalizeMediaUrl(post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? ""),
+    content:   normalizeContentHtml(post.content?.rendered ?? ""),
   };
 }
 

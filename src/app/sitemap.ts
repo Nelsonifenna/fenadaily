@@ -26,7 +26,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   },
 ];
 
-const CATEGORY_SLUGS = ["ai", "football", "crypto", "business", "technology", "personal-growth"];
+const CATEGORY_SLUGS = ["ai", "football", "crypto", "business", "technology", "personal-growth", "music", "politics"];
 
 const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) => ({
   url: `${SITE_URL}/category/${slug}`,
