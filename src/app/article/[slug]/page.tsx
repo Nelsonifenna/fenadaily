@@ -6,6 +6,8 @@ import { ShareSection } from "@/components/ShareSection";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { getArticleBySlug, getLatestPosts } from "@/lib/content";
 
+export const revalidate = 1800; // re-fetch WordPress every 30 min; serve cache on failure
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
