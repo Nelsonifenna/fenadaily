@@ -99,10 +99,10 @@ export default function EditorialPolicyPage() {
               <p>
                 If you believe something we&apos;ve published is incorrect, please contact us at{" "}
                 <a
-                  href="mailto:hello@fenadaily.com"
+                  href="mailto:fenadaily@gmail.com"
                   className="text-amber-300 transition-colors hover:text-amber-200"
                 >
-                  hello@fenadaily.com
+                  fenadaily@gmail.com
                 </a>
                 . We review every report and respond to substantive corrections.
               </p>
@@ -181,10 +181,10 @@ export default function EditorialPolicyPage() {
                 do that if our readers know we are playing it straight. If you have questions about
                 any of our editorial decisions, please reach out:{" "}
                 <a
-                  href="mailto:hello@fenadaily.com"
+                  href="mailto:fenadaily@gmail.com"
                   className="text-amber-300 transition-colors hover:text-amber-200"
                 >
-                  hello@fenadaily.com
+                  fenadaily@gmail.com
                 </a>
                 .
               </p>

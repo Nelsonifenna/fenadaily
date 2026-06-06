@@ -41,7 +41,7 @@ const siteSchema = {
       sameAs: SOCIAL_SAME_AS,
       contactPoint: {
         "@type": "ContactPoint",
-        email: "hello@fenadaily.com",
+        email: "fenadaily@gmail.com",
         contactType: "editorial",
       },
     },

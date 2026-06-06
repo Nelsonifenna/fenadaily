@@ -151,10 +151,10 @@ export default function AuthorsPage() {
                   </Link>{" "}
                   or email{" "}
                   <a
-                    href="mailto:hello@fenadaily.com"
+                    href="mailto:fenadaily@gmail.com"
                     className="font-medium text-amber-300 transition-colors hover:text-amber-200"
                   >
-                    hello@fenadaily.com
+                    fenadaily@gmail.com
                   </a>
                 </p>
               </div>

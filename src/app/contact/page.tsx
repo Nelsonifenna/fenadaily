@@ -34,7 +34,7 @@ const schema = {
     "@type": "Organization",
     name: "Fena Daily",
     url: SITE_URL,
-    email: "hello@fenadaily.com",
+    email: "fenadaily@gmail.com",
   },
 };
 
@@ -95,10 +95,10 @@ export default function ContactPage() {
               <p className="text-xs text-zinc-400">
                 You can also email us directly at{" "}
                 <a
-                  href="mailto:hello@fenadaily.com"
+                  href="mailto:fenadaily@gmail.com"
                   className="font-medium text-amber-300 transition-colors hover:text-amber-200"
                 >
-                  hello@fenadaily.com
+                  fenadaily@gmail.com
                 </a>
               </p>
             </div>

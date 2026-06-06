@@ -104,10 +104,10 @@ const sections = [
         the right to access, correct, or delete your information. To exercise any of these rights,
         contact us at{" "}
         <a
-          href="mailto:hello@fenadaily.com"
+          href="mailto:fenadaily@gmail.com"
           className="text-amber-300 transition-colors hover:text-amber-200"
         >
-          hello@fenadaily.com
+          fenadaily@gmail.com
         </a>
         . We will respond within a reasonable timeframe.
       </p>
@@ -141,10 +141,10 @@ const sections = [
         If you have questions or concerns about this privacy policy or how we handle your data,
         please email us at{" "}
         <a
-          href="mailto:hello@fenadaily.com"
+          href="mailto:fenadaily@gmail.com"
           className="text-amber-300 transition-colors hover:text-amber-200"
         >
-          hello@fenadaily.com
+          fenadaily@gmail.com
         </a>
         .
       </p>
