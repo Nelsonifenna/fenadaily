@@ -19,6 +19,21 @@ const SITE_NAME = "Fena Daily";
 const SITE_DESCRIPTION =
   "Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.";
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Fena Daily",
+  url: SITE_URL,
+  description:
+    "Fena Daily is an independent digital publication covering business, technology, AI, finance, entrepreneurship, personal growth, and global affairs.",
+  sameAs: ["https://twitter.com/fenadaily"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "hello@fenadaily.com",
+    contactType: "editorial",
+  },
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
@@ -89,6 +104,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-950 text-white">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         <Header />
         <div className="flex-1">{children}</div>
         <Footer />
