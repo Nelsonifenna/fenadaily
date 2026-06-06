@@ -1,9 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+// Diagnostic endpoint — reveals internal infrastructure details (CMS host,
+// server software, PHP version, raw post data). Must NOT be publicly
+// readable: gate it behind a secret so only the site operator can use it
+// (e.g. https://fenadaily.com/api/wp-status?key=...). Without a configured
+// secret the endpoint is disabled entirely (404) so nothing is exposed.
+export async function GET(request: NextRequest) {
+  const statusSecret = process.env.WP_STATUS_SECRET;
+  const providedKey  = request.nextUrl.searchParams.get("key");
+
+  if (!statusSecret || providedKey !== statusSecret) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   const wordpressUrl = (process.env.WORDPRESS_URL ?? "(not set)").replace(/\/+$/, "");
   const apiBase     = `${wordpressUrl}/wp-json/wp/v2`;
   const testUrl     = `${apiBase}/posts?per_page=1`;

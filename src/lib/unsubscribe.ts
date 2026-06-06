@@ -1,7 +1,23 @@
 import { createHmac } from "crypto";
 
+// A predictable fallback secret would let anyone forge unsubscribe tokens for
+// arbitrary email addresses. Warn loudly so a missing env var in production
+// is caught quickly, but don't crash page rendering over it.
+let warned = false;
+
 function secret(): string {
-  return process.env.UNSUBSCRIBE_SECRET ?? "dev-secret-replace-in-production";
+  const configured = process.env.UNSUBSCRIBE_SECRET;
+  if (configured) return configured;
+
+  if (!warned) {
+    console.error(
+      "[unsubscribe] UNSUBSCRIBE_SECRET is not set — falling back to an insecure " +
+      "default. Set UNSUBSCRIBE_SECRET in the environment (openssl rand -hex 32) " +
+      "to prevent unsubscribe tokens from being forged."
+    );
+    warned = true;
+  }
+  return "dev-secret-replace-in-production";
 }
 
 export function generateUnsubscribeToken(email: string): string {

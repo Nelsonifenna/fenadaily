@@ -7,6 +7,8 @@
  * separate URL — e.g. cms.fenadaily.com or the hosting provider's direct URL.
  */
 
+import sanitizeHtml from "sanitize-html";
+
 const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://cms.fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
 
@@ -39,6 +41,42 @@ function normalizeContentHtml(html: string): string {
     out = out.replaceAll(`https://${host}/wp-content/`, `https://${CMS_HOSTNAME}/wp-content/`);
   }
   return out;
+}
+
+// Article HTML comes from the WordPress REST API and is rendered with
+// dangerouslySetInnerHTML. Sanitize it server-side so a compromised CMS
+// account, vulnerable plugin, or malicious contributor can't inject
+// stored XSS (<script>, event handlers, javascript: URLs, etc.) into
+// pages served to every visitor and to Googlebot.
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: [
+    "p", "br", "hr", "span", "div",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "strong", "b", "em", "i", "u", "s", "mark", "small", "sub", "sup",
+    "a", "blockquote", "q", "cite", "code", "pre",
+    "ul", "ol", "li", "dl", "dt", "dd",
+    "table", "thead", "tbody", "tfoot", "tr", "th", "td",
+    "figure", "figcaption", "img", "picture", "source",
+    "iframe",
+  ],
+  allowedAttributes: {
+    a:       ["href", "title", "rel", "target"],
+    img:     ["src", "srcset", "sizes", "alt", "title", "width", "height", "loading"],
+    source:  ["src", "srcset", "sizes", "type", "media"],
+    iframe:  ["src", "title", "width", "height", "allow", "allowfullscreen", "frameborder"],
+    "*":     ["class", "id"],
+  },
+  allowedIframeHostnames: ["www.youtube.com", "player.vimeo.com", "www.youtube-nocookie.com"],
+  allowedSchemes: ["http", "https", "mailto"],
+  allowedSchemesByTag: { img: ["http", "https", "data"] },
+  transformTags: {
+    a: sanitizeHtml.simpleTransform("a", { rel: "noopener noreferrer nofollow" }, true),
+  },
+};
+
+function sanitizeContentHtml(html: string): string {
+  if (!html) return html;
+  return sanitizeHtml(html, SANITIZE_OPTIONS);
 }
 
 const REVALIDATE_POSTS = 1800;
@@ -139,7 +177,7 @@ function mapPost(post: WPRawPost) {
     featured:  post.featured ?? false,
     trending:  post.sticky   ?? false,
     image:     normalizeMediaUrl(post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? ""),
-    content:   normalizeContentHtml(post.content?.rendered ?? ""),
+    content:   sanitizeContentHtml(normalizeContentHtml(post.content?.rendered ?? "")),
   };
 }
 
