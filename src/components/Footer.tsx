@@ -1,22 +1,23 @@
 import Link from "next/link";
+import { SocialLinks } from "@/components/SocialLinks";
 
 const publicationLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Authors", href: "/authors" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "About Us",         href: "/about" },
+  { label: "Authors",          href: "/authors" },
+  { label: "Contact Us",       href: "/contact" },
   { label: "Editorial Policy", href: "/editorial-policy" },
-  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Privacy Policy",   href: "/privacy-policy" },
 ];
 
 const categoryLinks = [
-  { label: "AI", href: "/category/ai" },
-  { label: "Football", href: "/category/football" },
-  { label: "Crypto", href: "/category/crypto" },
-  { label: "Business", href: "/category/business" },
-  { label: "Technology", href: "/category/technology" },
-  { label: "Personal Growth", href: "/category/personal-growth" },
-  { label: "Music", href: "/category/music" },
-  { label: "Politics", href: "/category/politics" },
+  { label: "AI",             href: "/category/ai" },
+  { label: "Football",       href: "/category/football" },
+  { label: "Crypto",         href: "/category/crypto" },
+  { label: "Business",       href: "/category/business" },
+  { label: "Technology",     href: "/category/technology" },
+  { label: "Personal Growth",href: "/category/personal-growth" },
+  { label: "Music",          href: "/category/music" },
+  { label: "Politics",       href: "/category/politics" },
 ];
 
 export function Footer() {
@@ -24,6 +25,7 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-slate-950">
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+
           {/* Brand */}
           <div>
             <Link href="/">
@@ -32,9 +34,10 @@ export function Footer() {
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-400">
               Independent insights on business, technology, AI, finance, personal growth, and the ideas shaping our world.
             </p>
-            <p className="mt-4 text-xs italic text-zinc-600">
+            <p className="mt-3 text-xs italic text-zinc-600">
               Knowledge for curious, ambitious people.
             </p>
+            <SocialLinks className="mt-5" />
           </div>
 
           {/* Publication */}

@@ -65,7 +65,21 @@ export default async function CategoryPage({
   const description = getCategoryDescription(slug);
   const posts = await getPostsByCategory(slug, 24);
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: label,   item: `${SITE_URL}/category/${slug}` },
+    ],
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
     <main className="min-h-screen bg-[linear-gradient(160deg,#08111f_0%,#0d1623_50%,#020617_100%)] text-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:px-8 lg:py-14">
 
@@ -111,5 +125,6 @@ export default async function CategoryPage({
         )}
       </div>
     </main>
+    </>
   );
 }

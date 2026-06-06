@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "./ContactForm";
+import { SocialLinks } from "@/components/SocialLinks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC = "Get in touch with Fena Daily — for inquiries, feedback, corrections, collaborations, or advertising.";
@@ -100,6 +101,14 @@ export default function ContactPage() {
                   hello@fenadaily.com
                 </a>
               </p>
+            </div>
+
+            {/* Social links */}
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.35em] text-zinc-500">
+                Also Find Us On
+              </p>
+              <SocialLinks />
             </div>
 
             <ContactForm email={null} />

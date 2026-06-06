@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SocialLinks } from "@/components/SocialLinks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 
@@ -158,6 +159,14 @@ export default function AboutPage() {
                   grateful you&apos;re here.
                 </p>
               </section>
+
+              {/* Social links */}
+              <div className="border-t border-white/10 pt-6">
+                <p className="mb-3 text-xs font-medium uppercase tracking-[0.35em] text-zinc-500">
+                  Follow Us
+                </p>
+                <SocialLinks />
+              </div>
             </div>
           </div>
         </div>

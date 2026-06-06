@@ -13,17 +13,19 @@ import {
 export type { WPPage, WPCategory, CategoryHighlight };
 
 export type Article = {
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  readingTime: string;
-  author: string;
-  publishedAt: string;
-  featured?: boolean;
-  trending?: boolean;
-  image: string;
-  content?: string;
+  slug:          string;
+  title:         string;
+  excerpt:       string;
+  category:      string;
+  readingTime:   string;
+  author:        string;
+  datePublished: string; // ISO 8601 — use for structured data and OG publishedTime
+  dateModified:  string; // ISO 8601 — use for structured data
+  publishedAt:   string; // Human-readable display date
+  featured?:     boolean;
+  trending?:     boolean;
+  image:         string;
+  content?:      string;
 };
 
 // ── Posts ──────────────────────────────────────────────────────────────────

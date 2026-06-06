@@ -7,7 +7,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        // /api/og must be crawlable — Google needs it to fetch OG images for
+        // Discover and rich previews. The more-specific /api/og allow overrides
+        // the broader /api/ disallow per Google's longest-match rule.
+        allow: ["/", "/api/og"],
         disallow: ["/api/", "/studio/"],
       },
     ],

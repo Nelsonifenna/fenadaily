@@ -68,9 +68,10 @@ type WPMedia   = { source_url: string };
 type WPAuthor  = { name: string };
 
 type WPRawPost = {
-  slug: string;
-  date: string;
-  sticky: boolean;
+  slug:     string;
+  date:     string;
+  modified: string;
+  sticky:   boolean;
   featured: boolean;
   title:   { rendered: string };
   excerpt: { rendered: string };
@@ -124,13 +125,15 @@ function extractCategoryName(post: WPRawPost): string {
 function mapPost(post: WPRawPost) {
   const rawAuthor = post._embedded?.author?.[0]?.name ?? "Fena Daily";
   return {
-    slug:        post.slug,
-    title:       post.title.rendered,
-    excerpt:     stripHtml(post.excerpt?.rendered ?? "").substring(0, 160),
-    category:    extractCategoryName(post),
-    readingTime: calculateReadingTime(post.content?.rendered ?? ""),
-    author:      sanitizeAuthor(rawAuthor),
-    publishedAt: new Date(post.date).toLocaleDateString("en-US", {
+    slug:          post.slug,
+    title:         post.title.rendered,
+    excerpt:       stripHtml(post.excerpt?.rendered ?? "").substring(0, 160),
+    category:      extractCategoryName(post),
+    readingTime:   calculateReadingTime(post.content?.rendered ?? ""),
+    author:        sanitizeAuthor(rawAuthor),
+    datePublished: post.date,                          // ISO 8601 — for structured data & OG
+    dateModified:  post.modified ?? post.date,         // ISO 8601 — for structured data
+    publishedAt:   new Date(post.date).toLocaleDateString("en-US", {
       year: "numeric", month: "long", day: "numeric",
     }),
     featured:  post.featured ?? false,

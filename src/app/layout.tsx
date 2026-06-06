@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SOCIAL_SAME_AS } from "@/lib/social";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,19 +20,41 @@ const SITE_NAME = "Fena Daily";
 const SITE_DESCRIPTION =
   "Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.";
 
-const organizationSchema = {
+const siteSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Fena Daily",
-  url: SITE_URL,
-  description:
-    "Fena Daily is an independent digital publication covering business, technology, AI, finance, entrepreneurship, personal growth, and global affairs.",
-  sameAs: ["https://twitter.com/fenadaily"],
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "hello@fenadaily.com",
-    contactType: "editorial",
-  },
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      description:
+        "Fena Daily is an independent digital publication covering business, technology, AI, finance, entrepreneurship, personal growth, and global affairs.",
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${SITE_URL}/#logo`,
+        url: `${SITE_URL}/api/og`,
+        width: 1200,
+        height: 630,
+        caption: SITE_NAME,
+      },
+      sameAs: SOCIAL_SAME_AS,
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "hello@fenadaily.com",
+        contactType: "editorial",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      inLanguage: "en-US",
+    },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -47,12 +70,10 @@ export const metadata: Metadata = {
   creator: "Fena Daily",
   publisher: "Fena Daily",
 
-  // Canonical
   alternates: {
     canonical: "/",
   },
 
-  // Indexing
   robots: {
     index: true,
     follow: true,
@@ -64,7 +85,6 @@ export const metadata: Metadata = {
     },
   },
 
-  // Open Graph
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -82,7 +102,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  // Twitter / X
   twitter: {
     card: "summary_large_image",
     title: SITE_NAME,
@@ -103,10 +122,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-white">
+      <body className="flex min-h-full flex-col bg-slate-950 text-white">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
         />
         <Header />
         <div className="flex-1">{children}</div>
