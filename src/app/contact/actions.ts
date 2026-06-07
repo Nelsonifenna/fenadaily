@@ -35,7 +35,7 @@ export async function submitContact(
     console.error("RESEND_API_KEY is not set");
     return {
       status: "error",
-      message: `Email us directly at ${RECIPIENT} — our contact form is being set up.`,
+      message: `Email us directly at ${RECIPIENT}. Our contact form is being set up.`,
     };
   }
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC =
-  "Fena Daily's Privacy Policy — how we collect, use, and protect your information when you visit our site or subscribe to our newsletter.";
+  "Fena Daily's Privacy Policy: how we collect, use, and protect your information when you visit our site or subscribe to our newsletter.";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -28,7 +28,7 @@ const sections = [
         </p>
         <p>
           <strong className="text-white">Automatically collected data:</strong> Like most websites, we
-          may collect certain technical data automatically when you visit — including your IP address,
+          may collect certain technical data automatically when you visit, including your IP address,
           browser type, referring page, and the pages you view. This data is used only to understand
           how our site is used and to improve it. We do not build profiles or use this data for
           advertising targeting.
@@ -100,7 +100,7 @@ const sections = [
     heading: "7. Your Rights",
     content: (
       <p>
-        Depending on where you live, you may have rights regarding your personal data — including
+        Depending on where you live, you may have rights regarding your personal data, including
         the right to access, correct, or delete your information. To exercise any of these rights,
         contact us at{" "}
         <a

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC =
-  "Fena Daily's Editorial Policy — our commitment to accuracy, fact-checking, corrections, transparency, and editorial independence.";
+  "Fena Daily's Editorial Policy: our commitment to accuracy, fact-checking, corrections, transparency, and editorial independence.";
 
 export const metadata: Metadata = {
   title: "Editorial Policy",
@@ -27,7 +27,7 @@ const contentTypes = [
   },
   {
     label: "Opinion",
-    desc: "Clearly labeled commentary representing a perspective — not necessarily an institutional position of Fena Daily.",
+    desc: "Clearly labeled commentary representing a perspective, not necessarily an institutional position of Fena Daily.",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function EditorialPolicyPage() {
 
           <p className="mt-6 text-sm leading-relaxed text-zinc-300 sm:text-base">
             Fena Daily exists because we believe independent, thoughtful journalism matters. The
-            standards described here reflect how we approach our work — and what you can expect
+            standards described here reflect how we approach our work, and what you can expect
             from us every time you read something we&apos;ve published.
           </p>
 
@@ -56,7 +56,7 @@ export default function EditorialPolicyPage() {
                 possible.
               </p>
               <p>
-                If we cannot verify a claim with reasonable confidence, we say so explicitly — or
+                If we cannot verify a claim with reasonable confidence, we say so explicitly, or
                 we don&apos;t publish it. We distinguish between established facts, expert opinion,
                 and developing information.
               </p>
@@ -67,7 +67,7 @@ export default function EditorialPolicyPage() {
               <p className="mb-3">Our fact-checking process involves:</p>
               <ul className="space-y-2.5 pl-0">
                 {[
-                  "Consulting primary sources — official reports, peer-reviewed research, company filings, government data",
+                  "Consulting primary sources: official reports, peer-reviewed research, company filings, government data",
                   "Cross-referencing multiple credible sources before stating something as fact",
                   "Being explicit about uncertainty when it exists",
                   "Distinguishing between what is confirmed and what is reported or alleged",
@@ -174,7 +174,7 @@ export default function EditorialPolicyPage() {
               <h2 className="mb-3 text-base font-semibold text-white sm:text-lg">Reader Trust</h2>
               <p className="mb-3">
                 Everything above comes down to one thing: we want to earn your trust. Not your
-                clicks — your trust.
+                clicks. Your trust.
               </p>
               <p>
                 We are an independent publication building toward something long-term. We can only

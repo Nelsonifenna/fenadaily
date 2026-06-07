@@ -291,7 +291,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Newsletter</p>
               <h3 className="mt-2 text-base font-semibold text-white">Stay informed. Stay ahead.</h3>
               <p className="mt-1.5 text-sm text-zinc-400">
-                Top stories delivered to your inbox — free, no spam.
+                Top stories delivered to your inbox: free, no spam.
               </p>
               <NewsletterForm stacked />
             </section>

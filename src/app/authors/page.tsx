@@ -5,7 +5,7 @@ import { getLatestPosts } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC =
-  "Meet the Fena Daily editorial team — the researchers and writers behind our coverage of business, technology, AI, finance, and personal development.";
+  "Meet the Fena Daily editorial team: the researchers and writers behind our coverage of business, technology, AI, finance, and personal development.";
 
 export const metadata: Metadata = {
   title: "Authors",
@@ -87,7 +87,7 @@ export default async function AuthorsPage() {
                 </p>
                 <p className="mt-0.5 text-xs text-zinc-500">Fena Daily &middot; Independent Publication</p>
                 <p className="mt-2 max-w-md text-sm text-zinc-400">
-                  Researchers and writers covering AI, business, technology, football, music, politics, and personal growth — every story is reviewed before it&apos;s published.
+                  Researchers and writers covering AI, business, technology, football, music, politics, and personal growth. Every story is reviewed before it&apos;s published.
                 </p>
               </div>
             </div>
@@ -100,7 +100,7 @@ export default async function AuthorsPage() {
               </p>
               <p>
                 Our work is driven by genuine curiosity. We explore the ideas, trends, and
-                developments we believe matter — the ones affecting how people work, build
+                developments we believe matter: the ones affecting how people work, build
                 companies, manage money, and navigate a world that&apos;s changing faster than most
                 people expected.
               </p>
@@ -114,7 +114,7 @@ export default async function AuthorsPage() {
                 </p>
                 <p>
                   We don&apos;t have an agenda beyond getting it right and making it useful. We
-                  write in a tone that&apos;s direct and human — the kind of voice you&apos;d want
+                  write in a tone that&apos;s direct and human, the kind of voice you&apos;d want
                   explaining something complicated to you clearly, without oversimplifying it.
                 </p>
               </section>
@@ -138,7 +138,7 @@ export default async function AuthorsPage() {
                   Our Standard
                 </h2>
                 <p>
-                  Clarity, usefulness, and accuracy — in that order. We hold ourselves to a simple
+                  Clarity, usefulness, and accuracy, in that order. We hold ourselves to a simple
                   standard: would a thoughtful, busy person find this genuinely helpful? If the
                   answer isn&apos;t yes, we keep working.
                 </p>

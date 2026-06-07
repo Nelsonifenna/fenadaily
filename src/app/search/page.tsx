@@ -31,7 +31,7 @@ export default async function SearchPage({
             Find a story
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-            Search across every article Fena Daily has published — AI, Football, Crypto, Business, Technology, Music, Politics, and more.
+            Search across every article Fena Daily has published: AI, Football, Crypto, Business, Technology, Music, Politics, and more.
           </p>
           <div className="mt-6">
             <SearchForm defaultValue={query} />

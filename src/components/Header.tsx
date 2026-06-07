@@ -168,7 +168,7 @@ export function Header() {
                 />
                 <p className="text-sm font-semibold text-white">Stay informed. Stay ahead.</p>
                 <p className="mt-1 text-xs text-zinc-400">
-                  Top stories across AI, Football, Crypto and more — straight to your inbox.
+                  Top stories across AI, Football, Crypto and more, straight to your inbox.
                 </p>
                 <NewsletterForm stacked />
               </div>

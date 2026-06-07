@@ -120,7 +120,7 @@ export function buildWelcomeEmail({
             <!-- Body -->
             <p style="margin:0 0 36px;font-size:16px;color:#94a3b8;line-height:1.65;font-family:Arial,Helvetica,sans-serif;">
               You&#39;re subscribed. Every edition brings you independent, no-fluff coverage of the stories
-              that matter — across AI, Football, Crypto, Business, Technology, Music, Politics, and Personal Growth.
+              that matter, across AI, Football, Crypto, Business, Technology, Music, Politics, and Personal Growth.
             </p>
 
             <!-- CTA button -->
@@ -232,19 +232,19 @@ export function buildWelcomeEmail({
 </html>`;
 
   const text = [
-    "FENA DAILY — Welcome!",
+    "FENA DAILY: Welcome!",
     "════════════════════════════════",
     "",
     "You're subscribed. Here's what you'll receive:",
     "",
-    "  🤖 AI            — Artificial intelligence & machine learning",
-    "  ⚽ Football      — Scores, transfers & match analysis",
-    "  ₿  Crypto        — Markets, Web3 & blockchain news",
-    "  💼 Business      — Strategy, finance & global markets",
-    "  💻 Technology    — Gadgets, software & innovation",
-    "  🎵 Music         — Culture, releases & the music industry",
-    "  📈 Personal Growth — Mindset, habits & everyday wins",
-    "  🗳️ Politics       — Global affairs, policy & world events",
+    "  🤖 AI: Artificial intelligence & machine learning",
+    "  ⚽ Football: Scores, transfers & match analysis",
+    "  ₿  Crypto: Markets, Web3 & blockchain news",
+    "  💼 Business: Strategy, finance & global markets",
+    "  💻 Technology: Gadgets, software & innovation",
+    "  🎵 Music: Culture, releases & the music industry",
+    "  📈 Personal Growth: Mindset, habits & everyday wins",
+    "  🗳️ Politics: Global affairs, policy & world events",
     "",
     "Read today's stories:",
     siteUrl,

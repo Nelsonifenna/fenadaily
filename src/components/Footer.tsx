@@ -35,7 +35,7 @@ export function Footer() {
                 Get Fena Daily in your inbox
               </h2>
               <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                Top stories across AI, Football, Crypto, Business, Music, and Politics — once a day, free, no spam.
+                Top stories across AI, Football, Crypto, Business, Music, and Politics: once a day, free, no spam.
               </p>
             </div>
             <div className="w-full lg:max-w-sm">

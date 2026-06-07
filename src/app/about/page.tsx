@@ -83,7 +83,7 @@ export default function AboutPage() {
             <div className="mt-8 space-y-8 text-sm leading-relaxed text-zinc-300 sm:text-base">
               <p>
                 Fena Daily is an independent digital publication covering the ideas, trends, and
-                developments shaping our world — from artificial intelligence and entrepreneurship
+                developments shaping our world, from artificial intelligence and entrepreneurship
                 to careers, finance, and global affairs.
               </p>
               <p>
@@ -96,8 +96,8 @@ export default function AboutPage() {
                 <p className="mb-3">
                   We started Fena Daily because we believe that good journalism and clear analysis
                   shouldn&apos;t be locked behind paywalls or buried in jargon. The world is changing
-                  fast — AI is restructuring work, new business models are emerging overnight,
-                  financial systems are evolving — and most people deserve access to honest,
+                  fast: AI is restructuring work, new business models are emerging overnight,
+                  and financial systems are evolving. Most people deserve access to honest,
                   well-researched coverage of what&apos;s happening and why it matters.
                 </p>
                 <p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
                     <li key={topic} className="flex gap-3">
                       <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amber-400" />
                       <span>
-                        <strong className="text-white">{topic}</strong> — {desc}
+                        <strong className="text-white">{topic}</strong>: {desc}
                       </span>
                     </li>
                   ))}
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 <p>
                   Before an article goes up, we research it thoroughly, verify key claims, and think
                   carefully about how to explain it clearly. If something we&apos;ve published turns
-                  out to be wrong, we correct it — promptly and transparently. We write in a tone
+                  out to be wrong, we correct it, promptly and transparently. We write in a tone
                   that&apos;s honest and direct: like people who find this stuff genuinely fascinating
                   and want to share what they&apos;ve learned.
                 </p>
@@ -141,7 +141,7 @@ export default function AboutPage() {
                 <p>
                   Fena Daily is independently operated. We are not owned by a media conglomerate,
                   affiliated with any political group, or funded by industry interests. Our editorial
-                  decisions are based on what we believe is worth covering — not what serves an
+                  decisions are based on what we believe is worth covering, not what serves an
                   advertiser or sponsor. When we run advertising or partnership content, it will be
                   clearly labeled, and the line between editorial and commercial will remain clear.
                 </p>
@@ -150,7 +150,7 @@ export default function AboutPage() {
               <section>
                 <h2 className="mb-3 text-lg font-semibold text-white sm:text-xl">Where We&apos;re Headed</h2>
                 <p className="mb-3">
-                  Our goal isn&apos;t viral moments — it&apos;s a publication that earns your trust
+                  Our goal isn&apos;t viral moments. It&apos;s a publication that earns your trust
                   over time by consistently delivering content that&apos;s accurate, thoughtful,
                   and useful.
                 </p>

@@ -38,7 +38,7 @@ export default async function Home() {
               Fena Daily
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300 sm:mt-5 sm:text-lg md:text-xl">
-              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth — reported and explained for curious, ambitious people.
+              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth, reported and explained for curious, ambitious people.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
               {featuredStory && (

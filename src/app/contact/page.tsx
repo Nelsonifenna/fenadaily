@@ -3,7 +3,7 @@ import { ContactForm } from "./ContactForm";
 import { SocialLinks } from "@/components/SocialLinks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
-const DESC = "Get in touch with Fena Daily — for inquiries, feedback, corrections, collaborations, or advertising.";
+const DESC = "Get in touch with Fena Daily for inquiries, feedback, corrections, collaborations, or advertising.";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -74,7 +74,7 @@ export default function ContactPage() {
 
             <p className="mt-6 text-sm leading-relaxed text-zinc-300 sm:text-base">
               We&apos;d love to hear from you. Whether you have a question, a correction,
-              a story tip, or want to explore a partnership — use the form below or email
+              a story tip, or want to explore a partnership, use the form below or email
               us directly.
             </p>
 
