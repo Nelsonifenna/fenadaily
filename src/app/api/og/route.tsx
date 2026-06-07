@@ -3,10 +3,15 @@ import type { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
+// Caps on user-supplied query params — keeps Satori's rendering cost bounded
+// regardless of how long a crafted "title"/"category" value is.
+const MAX_TITLE_LENGTH    = 200;
+const MAX_CATEGORY_LENGTH = 60;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const title    = searchParams.get("title")    ?? "Fena Daily";
-  const category = searchParams.get("category") ?? "";
+  const title    = (searchParams.get("title")    ?? "Fena Daily").slice(0, MAX_TITLE_LENGTH);
+  const category = (searchParams.get("category") ?? "").slice(0, MAX_CATEGORY_LENGTH);
   const type     = searchParams.get("type")     ?? "site"; // "article" | "category" | "site"
 
   return new ImageResponse(

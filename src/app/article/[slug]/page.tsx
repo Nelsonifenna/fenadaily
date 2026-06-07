@@ -2,17 +2,21 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { ArticleCard } from "@/components/ArticleCard";
+import { StoryRow } from "@/components/StoryRow";
 import { ShareSection } from "@/components/ShareSection";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { getArticleBySlug, getLatestPosts } from "@/lib/content";
+import { ReadingProgressBar } from "@/components/ReadingProgressBar";
+import {
+  getArticleBySlug,
+  getRelatedArticles,
+  getMoreFromCategory,
+  getLatestPosts,
+  categoryToSlug,
+} from "@/lib/content";
 
 export const revalidate = 1800;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
-
-function categorySlug(categoryName: string): string {
-  return categoryName.toLowerCase().replace(/\s+/g, "-");
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -82,10 +86,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     );
   }
 
-  const latestPosts = await getLatestPosts();
-  const related = latestPosts.filter((item) => item.slug !== article.slug).slice(0, 3);
+  const [related, moreFromCategory, latestPosts] = await Promise.all([
+    getRelatedArticles(article, 3),
+    getMoreFromCategory(article.category, article.slug, 4),
+    getLatestPosts(7),
+  ]);
 
-  const catSlug = categorySlug(article.category);
+  const usedSlugs = new Set([article.slug, ...related.map((r) => r.slug), ...moreFromCategory.map((r) => r.slug)]);
+  const moreStories = latestPosts.filter((p) => !usedSlugs.has(p.slug)).slice(0, 4);
+
+  const catSlug = categoryToSlug(article.category);
   const articleUrl = `${SITE_URL}/article/${slug}`;
   const imageUrl = article.image
     || `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}&type=article`;
@@ -141,11 +151,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
+      <ReadingProgressBar targetId="article-content" />
       <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
         <div className="mx-auto max-w-6xl gap-8 px-4 py-6 sm:py-8 lg:grid lg:grid-cols-[1fr_300px] lg:px-8 lg:py-12 xl:grid-cols-[1fr_320px]">
 
           {/* ── Main article ── */}
-          <article className="rounded-2xl border border-white/10 bg-zinc-950/85 p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6 md:p-8">
+          <article id="article-content" className="rounded-2xl border border-white/10 bg-zinc-950/85 p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6 md:p-8 lg:p-10">
 
             {/* Breadcrumbs */}
             <nav aria-label="Breadcrumb" className="mb-5">
@@ -169,8 +180,34 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </ol>
             </nav>
 
+            {/* Category badge + meta */}
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href={`/category/${catSlug}`}
+                className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-300 ring-1 ring-amber-400/25 transition-colors hover:bg-amber-400/25"
+              >
+                {article.category}
+              </Link>
+              <span className="text-xs text-zinc-500">
+                {article.readingTime}
+              </span>
+            </div>
+
+            <h1 className="mt-4 text-2xl font-bold leading-[1.15] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-[2.75rem]">
+              {article.title}
+            </h1>
+            <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300 sm:text-lg">{article.excerpt}</p>
+
+            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-white/10 py-3 text-sm text-zinc-300">
+              <span className="font-semibold text-white">{article.author}</span>
+              <span className="text-zinc-600">·</span>
+              <time dateTime={article.datePublished}>{article.publishedAt}</time>
+              <span className="text-zinc-600">·</span>
+              <span>{article.readingTime}</span>
+            </div>
+
             {/* Hero image */}
-            <div className="relative h-60 w-full overflow-hidden rounded-xl sm:h-72 sm:rounded-2xl md:h-80 md:rounded-[24px] lg:h-96">
+            <div className="relative mt-6 h-60 w-full overflow-hidden rounded-xl sm:h-80 sm:rounded-2xl md:h-[26rem] md:rounded-[24px]">
               {article.image ? (
                 <Image
                   src={article.image}
@@ -185,21 +222,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               )}
             </div>
 
-            <p className="mt-5 text-xs uppercase tracking-[0.35em] text-amber-300">{article.category}</p>
-            <h1 className="mt-3 text-2xl font-semibold leading-snug tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              {article.title}
-            </h1>
-            <p className="mt-4 text-base leading-relaxed text-zinc-300">{article.excerpt}</p>
-
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-zinc-300">
-              <span className="font-medium">{article.author}</span>
-              <span className="text-zinc-600">·</span>
-              <time dateTime={article.datePublished}>{article.publishedAt}</time>
-              <span className="text-zinc-600">·</span>
-              <span>{article.readingTime}</span>
-            </div>
-
-            <div className="mt-8 space-y-4 text-zinc-200 [&_img]:max-w-full [&_img]:rounded-xl [&_h1]:mt-8 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-white [&_h2]:mt-6 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-white [&_h3]:mt-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-white [&_p]:leading-relaxed [&_a]:text-amber-300 [&_a:hover]:text-amber-200 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1 [&_blockquote]:border-l-2 [&_blockquote]:border-amber-400/50 [&_blockquote]:pl-4 [&_blockquote]:text-zinc-400 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-4 [&_code]:text-xs sm:[&_h1]:text-3xl sm:[&_h2]:text-2xl">
+            <div className="prose-article mt-8 max-w-none text-[1.0625rem] leading-[1.8] text-zinc-200 [&_img]:max-w-full [&_img]:rounded-xl [&_h1]:mt-10 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-white [&_h2]:mt-9 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-white [&_h3]:mt-7 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-white [&_p]:mt-5 [&_p]:leading-[1.8] [&_a]:text-amber-300 [&_a:hover]:text-amber-200 [&_ul]:mt-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1.5 [&_blockquote]:mt-6 [&_blockquote]:border-l-2 [&_blockquote]:border-amber-400/50 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-zinc-400 [&_pre]:mt-5 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-4 [&_code]:text-sm sm:[&_h1]:text-3xl sm:[&_h2]:text-2xl">
               {article.content ? (
                 <div dangerouslySetInnerHTML={{ __html: article.content }} />
               ) : (
@@ -208,16 +231,36 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
 
             <ShareSection title={article.title} url={articleUrl} />
+
+            {/* More from this category */}
+            {moreFromCategory.length > 0 && (
+              <section className="mt-12 border-t border-white/10 pt-8">
+                <div className="mb-5 flex items-center justify-between gap-3">
+                  <h2 className="text-lg font-bold text-white sm:text-xl">More from {article.category}</h2>
+                  <Link
+                    href={`/category/${catSlug}`}
+                    className="shrink-0 text-xs font-medium text-zinc-400 transition-colors hover:text-amber-300"
+                  >
+                    View all →
+                  </Link>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {moreFromCategory.map((item) => (
+                    <ArticleCard key={item.slug} article={item} />
+                  ))}
+                </div>
+              </section>
+            )}
           </article>
 
           {/* ── Sidebar ── */}
           <aside className="mt-6 space-y-6 lg:mt-0 lg:space-y-8">
             {related.length > 0 && (
               <section className="rounded-2xl border border-white/10 bg-zinc-950/85 p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6 md:p-8">
-                <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Recommended</p>
-                <div className="mt-4 space-y-4">
+                <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Related Stories</p>
+                <div className="mt-4 flex flex-col gap-3">
                   {related.map((item) => (
-                    <ArticleCard key={item.slug} article={item} />
+                    <StoryRow key={item.slug} article={item} />
                   ))}
                 </div>
               </section>
@@ -225,14 +268,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
             <section className="rounded-2xl border border-white/10 bg-zinc-950/85 p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6 md:p-8">
               <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Author</p>
-              <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">{article.author}</h3>
-              <p className="mt-2 text-sm text-zinc-300">
-                Published{" "}
-                <time dateTime={article.datePublished}>{article.publishedAt}</time>
-              </p>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-sm font-bold text-amber-300">
+                  {article.author.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-white">{article.author}</h3>
+                  <p className="text-xs text-zinc-500">
+                    Published <time dateTime={article.datePublished}>{article.publishedAt}</time>
+                  </p>
+                </div>
+              </div>
               <Link
                 href="/authors"
-                className="mt-3 inline-block text-xs text-amber-400 transition-colors hover:text-amber-300"
+                className="mt-4 inline-block text-xs font-medium text-amber-400 transition-colors hover:text-amber-300"
               >
                 About the team →
               </Link>
@@ -248,6 +297,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </section>
           </aside>
         </div>
+
+        {/* ── More stories ── */}
+        {moreStories.length > 0 && (
+          <section className="mx-auto max-w-6xl px-4 pb-12 sm:pb-16 lg:px-8">
+            <div className="mb-5 flex items-center justify-between gap-3 sm:mb-6">
+              <span className="text-xs uppercase tracking-[0.4em] text-amber-400 font-semibold">Keep Reading</span>
+              <Link href="/" className="shrink-0 text-xs font-medium text-zinc-400 transition-colors hover:text-amber-300">
+                More stories →
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+              {moreStories.map((item) => (
+                <ArticleCard key={item.slug} article={item} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </>
   );

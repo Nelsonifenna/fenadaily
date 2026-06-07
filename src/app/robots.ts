@@ -11,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         // Discover and rich previews. The more-specific /api/og allow overrides
         // the broader /api/ disallow per Google's longest-match rule.
         allow: ["/", "/api/og"],
-        disallow: ["/api/", "/studio/"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

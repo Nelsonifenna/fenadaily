@@ -4,6 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { SearchForm } from "@/components/SearchForm";
+
+const SearchIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
 
 const primaryLinks = [
   { label: "Home", href: "/" },
@@ -26,35 +34,44 @@ export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
-  // Close the subscribe dropdown on route change
+  // Close the subscribe / search dropdowns on route change
   useEffect(() => {
     setSubscribeOpen(false);
+    setSearchOpen(false);
     setMenuOpen(false);
   }, [pathname]);
 
   // Close on outside click
   useEffect(() => {
-    if (!subscribeOpen) return;
+    if (!subscribeOpen && !searchOpen) return;
     function handle(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (subscribeOpen && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setSubscribeOpen(false);
+      }
+      if (searchOpen && searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
       }
     }
     document.addEventListener("mousedown", handle);
     return () => document.removeEventListener("mousedown", handle);
-  }, [subscribeOpen]);
+  }, [subscribeOpen, searchOpen]);
 
   // Close on Escape
   useEffect(() => {
-    if (!subscribeOpen) return;
+    if (!subscribeOpen && !searchOpen) return;
     function handle(e: KeyboardEvent) {
-      if (e.key === "Escape") setSubscribeOpen(false);
+      if (e.key === "Escape") {
+        setSubscribeOpen(false);
+        setSearchOpen(false);
+      }
     }
     document.addEventListener("keydown", handle);
     return () => document.removeEventListener("keydown", handle);
-  }, [subscribeOpen]);
+  }, [subscribeOpen, searchOpen]);
 
   function isActivePrimary(href: string) {
     if (href === "/") return pathname === "/";
@@ -97,8 +114,37 @@ export function Header() {
             </ul>
           </nav>
 
-          {/* Desktop: Subscribe CTA with inline dropdown */}
-          <div className="relative hidden md:block" ref={dropdownRef}>
+          {/* Desktop: Search + Subscribe */}
+          <div className="hidden items-center gap-2 md:flex">
+          <div className="relative" ref={searchRef}>
+            <button
+              onClick={() => setSearchOpen((o) => !o)}
+              aria-expanded={searchOpen}
+              aria-haspopup="dialog"
+              aria-label="Search"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-300 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            >
+              <SearchIcon />
+            </button>
+
+            {searchOpen && (
+              <div
+                role="dialog"
+                aria-label="Search Fena Daily"
+                aria-modal="false"
+                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900/98 p-4 shadow-2xl shadow-black/60 backdrop-blur-md"
+              >
+                <div
+                  aria-hidden
+                  className="absolute -top-1.5 right-4 h-3 w-3 rotate-45 rounded-sm border-l border-t border-white/10 bg-slate-900"
+                />
+                <SearchForm compact />
+              </div>
+            )}
+          </div>
+
+          {/* Subscribe CTA with inline dropdown */}
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setSubscribeOpen((o) => !o)}
               aria-expanded={subscribeOpen}
@@ -127,6 +173,7 @@ export function Header() {
                 <NewsletterForm stacked />
               </div>
             )}
+          </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -168,6 +215,15 @@ export function Header() {
       {/* ── Mobile menu ── */}
       {menuOpen && (
         <div className="border-b border-white/10 bg-slate-950 md:hidden">
+          {/* Search */}
+          <div className="px-4 pb-2 pt-4">
+            <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Search</p>
+            <SearchForm compact />
+          </div>
+
+          {/* Divider */}
+          <div className="mx-4 border-t border-white/8" />
+
           {/* Pages */}
           <div className="px-4 pb-2 pt-4">
             <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Pages</p>

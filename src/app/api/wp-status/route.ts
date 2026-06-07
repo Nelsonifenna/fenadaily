@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+// Constant-time string comparison — guards against timing attacks that could
+// let an attacker guess WP_STATUS_SECRET one character at a time by measuring
+// response latency of a naive `!==` comparison.
+function timingSafeStringEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    // Still run a comparison of equal-length buffers so the function takes a
+    // similar amount of time regardless of whether lengths match.
+    timingSafeEqual(bufA, bufA);
+    return false;
+  }
+  return timingSafeEqual(bufA, bufB);
+}
 
 // Diagnostic endpoint — reveals internal infrastructure details (CMS host,
 // server software, PHP version, raw post data). Must NOT be publicly
@@ -12,7 +28,7 @@ export async function GET(request: NextRequest) {
   const statusSecret = process.env.WP_STATUS_SECRET;
   const providedKey  = request.nextUrl.searchParams.get("key");
 
-  if (!statusSecret || providedKey !== statusSecret) {
+  if (!statusSecret || !providedKey || !timingSafeStringEqual(providedKey, statusSecret)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

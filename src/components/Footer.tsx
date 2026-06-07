@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { SocialLinks } from "@/components/SocialLinks";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 const publicationLinks = [
   { label: "About Us",         href: "/about" },
   { label: "Authors",          href: "/authors" },
+  { label: "Search",           href: "/search" },
   { label: "Contact Us",       href: "/contact" },
   { label: "Editorial Policy", href: "/editorial-policy" },
   { label: "Privacy Policy",   href: "/privacy-policy" },
@@ -23,6 +25,26 @@ const categoryLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-slate-950">
+      {/* Newsletter band */}
+      <div className="border-b border-white/10 bg-gradient-to-br from-amber-400/[0.06] via-transparent to-transparent">
+        <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+          <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="max-w-md">
+              <span className="text-xs uppercase tracking-[0.4em] text-amber-300 font-semibold">Newsletter</span>
+              <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">
+                Get Fena Daily in your inbox
+              </h2>
+              <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
+                Top stories across AI, Football, Crypto, Business, Music, and Politics — once a day, free, no spam.
+              </p>
+            </div>
+            <div className="w-full lg:max-w-sm">
+              <NewsletterForm />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
 

@@ -1,21 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArticleCard } from "@/components/ArticleCard";
+import { StoryRow } from "@/components/StoryRow";
+import { SectionHeader } from "@/components/SectionHeader";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import {
   getFeaturedStory,
   getLatestPosts,
+  getTrendingStories,
+  getPopularStories,
   getCategoryHighlights,
 } from "@/lib/content";
 
 export default async function Home() {
-  const [featuredStory, latestPosts, categoryHighlights] = await Promise.all([
+  const [featuredStory, latestPosts, trending, popular, categoryHighlights] = await Promise.all([
     getFeaturedStory(),
-    getLatestPosts(6),
+    getLatestPosts(13),
+    getTrendingStories(5),
+    getPopularStories(5),
     getCategoryHighlights(),
   ]);
 
-  const recentPosts = latestPosts.filter((p) => p.slug !== featuredStory?.slug);
+  const rest = latestPosts.filter((p) => p.slug !== featuredStory?.slug);
+  const featuredGrid = rest.slice(0, 3);
+  const latestGrid = rest.slice(3, 9);
 
   return (
     <main className="min-h-screen bg-[linear-gradient(160deg,#08111f_0%,#0d1623_50%,#020617_100%)] text-white">
@@ -24,11 +32,14 @@ export default async function Home() {
       <section className="relative overflow-hidden border-b border-white/8">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <span className="inline-block rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-300">
+              The Daily Briefing
+            </span>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
               Fena Daily
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300 sm:mt-5 sm:text-lg md:text-xl">
-              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.
+              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth — reported and explained for curious, ambitious people.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
               {featuredStory && (
@@ -54,12 +65,9 @@ export default async function Home() {
         />
       </section>
 
-      {/* ── Featured Story ── */}
+      {/* ── Featured Story + grid ── */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:px-8 lg:py-14">
-        <div className="mb-5 flex items-center gap-3 sm:mb-6">
-          <span className="text-xs uppercase tracking-[0.4em] text-amber-400 font-semibold">Featured Story</span>
-          <span className="h-px flex-1 bg-white/10" />
-        </div>
+        <SectionHeader eyebrow="Featured" title="Top Story" />
 
         {featuredStory ? (
           <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
@@ -88,7 +96,9 @@ export default async function Home() {
                   <span className="text-xs text-zinc-500">{featuredStory.publishedAt}</span>
                 </div>
                 <h2 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl md:text-3xl">
-                  {featuredStory.title}
+                  <Link href={`/article/${featuredStory.slug}`} className="transition-colors hover:text-amber-200">
+                    {featuredStory.title}
+                  </Link>
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:text-base">
                   {featuredStory.excerpt}
@@ -107,10 +117,10 @@ export default async function Home() {
               </div>
             </article>
 
-            {/* Sidebar: recent posts */}
+            {/* Featured grid: next top stories */}
             <aside className="flex flex-col gap-3 sm:gap-4">
-              <p className="text-xs uppercase tracking-[0.4em] text-zinc-500 font-medium">Recent</p>
-              {recentPosts.slice(0, 3).map((item) => (
+              <p className="text-xs uppercase tracking-[0.4em] text-zinc-500 font-medium">More Top Stories</p>
+              {featuredGrid.map((item) => (
                 <Link
                   key={item.slug}
                   href={`/article/${item.slug}`}
@@ -145,15 +155,40 @@ export default async function Home() {
         )}
       </section>
 
-      {/* ── Latest Articles ── */}
-      {recentPosts.length > 0 && (
+      {/* ── Trending + Most Read (two-column on desktop) ── */}
+      {(trending.length > 0 || popular.length > 0) && (
         <section className="mx-auto max-w-7xl px-4 pb-8 sm:pb-10 lg:px-8 lg:pb-14">
-          <div className="mb-5 flex items-center gap-3 sm:mb-6">
-            <span className="text-xs uppercase tracking-[0.4em] text-amber-400 font-semibold">Latest Articles</span>
-            <span className="h-px flex-1 bg-white/10" />
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+            {trending.length > 0 && (
+              <div>
+                <SectionHeader eyebrow="Trending" title="Trending Now" />
+                <div className="flex flex-col gap-3">
+                  {trending.map((item, i) => (
+                    <StoryRow key={item.slug} article={item} rank={i + 1} />
+                  ))}
+                </div>
+              </div>
+            )}
+            {popular.length > 0 && (
+              <div>
+                <SectionHeader eyebrow="Most Read" title="Popular This Week" />
+                <div className="flex flex-col gap-3">
+                  {popular.map((item, i) => (
+                    <StoryRow key={item.slug} article={item} rank={i + 1} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+        </section>
+      )}
+
+      {/* ── Latest Articles ── */}
+      {latestGrid.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-8 sm:pb-10 lg:px-8 lg:pb-14">
+          <SectionHeader eyebrow="Fresh" title="Latest Stories" />
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-            {recentPosts.slice(0, 6).map((item) => (
+            {latestGrid.map((item) => (
               <ArticleCard key={item.slug} article={item} />
             ))}
           </div>
@@ -162,10 +197,7 @@ export default async function Home() {
 
       {/* ── Category Highlights ── */}
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:pb-10 lg:px-8 lg:pb-14">
-        <div className="mb-5 flex items-center gap-3 sm:mb-6">
-          <span className="text-xs uppercase tracking-[0.4em] text-amber-400 font-semibold">Topics</span>
-          <span className="h-px flex-1 bg-white/10" />
-        </div>
+        <SectionHeader eyebrow="Explore" title="Browse by Topic" />
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {categoryHighlights.map(({ label, slug, count }) => (
             <Link

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArticleCard } from "@/components/ArticleCard";
+import { getLatestPosts } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const DESC =
@@ -57,7 +59,9 @@ const focusAreas = [
   "Global trends connecting and reshaping industries and societies",
 ];
 
-export default function AuthorsPage() {
+export default async function AuthorsPage() {
+  const recentPosts = await getLatestPosts(4);
+
   return (
     <>
       <script
@@ -74,7 +78,7 @@ export default function AuthorsPage() {
 
             {/* Author card */}
             <div className="mt-8 flex items-start gap-5 rounded-2xl border border-white/10 bg-white/4 p-5 sm:p-6">
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-xl font-bold text-amber-300 sm:h-16 sm:w-16">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400/25 to-amber-400/5 text-2xl font-bold text-amber-300 ring-1 ring-amber-400/20 sm:h-20 sm:w-20 sm:text-3xl">
                 FD
               </div>
               <div>
@@ -82,6 +86,9 @@ export default function AuthorsPage() {
                   Fena Daily Editorial Team
                 </p>
                 <p className="mt-0.5 text-xs text-zinc-500">Fena Daily &middot; Independent Publication</p>
+                <p className="mt-2 max-w-md text-sm text-zinc-400">
+                  Researchers and writers covering AI, business, technology, football, music, politics, and personal growth — every story is reviewed before it&apos;s published.
+                </p>
               </div>
             </div>
 
@@ -160,6 +167,19 @@ export default function AuthorsPage() {
               </div>
             </div>
           </div>
+
+          {recentPosts.length > 0 && (
+            <div className="mt-8">
+              <p className="mb-4 text-xs uppercase tracking-[0.4em] text-amber-300 font-semibold sm:mb-6">
+                Recent Stories from the Team
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {recentPosts.map((article) => (
+                  <ArticleCard key={article.slug} article={article} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </>

@@ -4,14 +4,14 @@ import type { Article } from "@/lib/content";
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="flex flex-col rounded-3xl border border-white/10 bg-zinc-950/80 p-4 shadow-2xl shadow-black/20 backdrop-blur md:p-5">
+    <article className="group flex flex-col rounded-3xl border border-white/10 bg-zinc-950/80 p-4 shadow-2xl shadow-black/20 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/25 hover:shadow-amber-400/5 md:p-5">
       <div className="relative mb-4 h-40 w-full overflow-hidden rounded-2xl">
         {article.image ? (
           <Image
             src={article.image}
             alt={article.title}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
@@ -19,7 +19,7 @@ export function ArticleCard({ article }: { article: Article }) {
         )}
       </div>
       <p className="text-xs uppercase tracking-[0.32em] text-amber-300">{article.category}</p>
-      <h3 className="mt-2 text-base font-semibold leading-snug text-white sm:text-lg md:text-xl">
+      <h3 className="mt-2 text-base font-semibold leading-snug text-white transition-colors group-hover:text-amber-200 sm:text-lg md:text-xl">
         {article.title}
       </h3>
       <p className="mt-2 line-clamp-3 text-sm text-zinc-300">{article.excerpt}</p>

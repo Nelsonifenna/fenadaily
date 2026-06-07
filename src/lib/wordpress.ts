@@ -236,6 +236,24 @@ export async function getPostBySlug(slug: string) {
   }
 }
 
+export async function searchPosts(query: string, limit = 20) {
+  const trimmed = query.trim();
+  if (!trimmed) return [];
+  const url = `${WP_API}/posts?search=${encodeURIComponent(trimmed)}&per_page=${limit}&_embed=author,wp:featuredmedia,wp:term&orderby=relevance`;
+  try {
+    const res = await wpFetch(url, { next: { revalidate: REVALIDATE_POSTS } });
+    if (!res.ok) {
+      console.error(`[wp] searchPosts("${trimmed}") failed — ${res.status} ${res.statusText} — URL: ${url}`);
+      return [];
+    }
+    const posts: WPRawPost[] = await res.json();
+    return Array.isArray(posts) ? posts.map(mapPost) : [];
+  } catch (err) {
+    console.error(`[wp] searchPosts("${trimmed}") fetch error — URL: ${url}`, err);
+    return [];
+  }
+}
+
 export async function getPostsByCategory(categorySlug: string, limit = 20) {
   const catUrl = `${WP_API}/categories?slug=${encodeURIComponent(categorySlug)}`;
   try {

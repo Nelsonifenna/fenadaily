@@ -3,6 +3,8 @@ import {
   getAllCategories,
   getFeaturedPosts,
   getPostBySlug,
+  getPostsByCategory,
+  searchPosts,
   getPageBySlug,
   getCategoryHighlights,
   type WPPage,
@@ -37,8 +39,8 @@ export async function getFeaturedStory(): Promise<Article | null> {
   return latest[0] ?? null;
 }
 
-export async function getTrendingStories(): Promise<Article[]> {
-  return getAllPosts(6);
+export async function getTrendingStories(limit = 6): Promise<Article[]> {
+  return getAllPosts(limit);
 }
 
 export async function getLatestPosts(limit = 6): Promise<Article[]> {
@@ -47,6 +49,49 @@ export async function getLatestPosts(limit = 6): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   return getPostBySlug(slug);
+}
+
+export function categoryToSlug(categoryName: string): string {
+  return categoryName.toLowerCase().trim().replace(/\s+/g, "-");
+}
+
+// Ranking signals available from the WordPress REST API are limited to
+// publish recency and the editor-controlled "sticky" flag — there is no
+// view-count or engagement data. This produces a stable, deterministic
+// "most read" ordering today (sticky stories first, then most recent) while
+// keeping a single seam (this function) to swap in real analytics-backed
+// ranking later without touching any page that consumes it.
+export async function getPopularStories(limit = 6): Promise<Article[]> {
+  const posts = await getAllPosts(Math.max(limit * 2, 12));
+  const ranked = [...posts].sort((a, b) => {
+    if (a.trending !== b.trending) return a.trending ? -1 : 1;
+    return new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime();
+  });
+  return ranked.slice(0, limit);
+}
+
+// "Related" = other stories from the same category; falls back to latest
+// stories when the category has nothing else to offer (new/small categories).
+export async function getRelatedArticles(article: Article, limit = 4): Promise<Article[]> {
+  const slug = categoryToSlug(article.category);
+  const sameCategory = (await getPostsByCategory(slug, limit + 1)).filter(
+    (p) => p.slug !== article.slug
+  );
+  if (sameCategory.length >= limit) return sameCategory.slice(0, limit);
+
+  const fallback = (await getAllPosts(limit + sameCategory.length + 1)).filter(
+    (p) => p.slug !== article.slug && !sameCategory.some((s) => s.slug === p.slug)
+  );
+  return [...sameCategory, ...fallback].slice(0, limit);
+}
+
+export async function getMoreFromCategory(category: string, excludeSlug: string, limit = 4): Promise<Article[]> {
+  const posts = await getPostsByCategory(categoryToSlug(category), limit + 1);
+  return posts.filter((p) => p.slug !== excludeSlug).slice(0, limit);
+}
+
+export async function searchArticles(query: string, limit = 20): Promise<Article[]> {
+  return searchPosts(query, limit);
 }
 
 // ── Categories ─────────────────────────────────────────────────────────────
