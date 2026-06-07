@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ArticleCard } from "@/components/ArticleCard";
 import { StoryRow } from "@/components/StoryRow";
 import { SectionHeader } from "@/components/SectionHeader";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import {
   getFeaturedStory,
   getLatestPosts,
@@ -222,26 +221,6 @@ export default async function Home() {
               />
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* ── Newsletter ── */}
-      <section className="mx-auto max-w-7xl px-4 pb-12 sm:pb-14 lg:px-8">
-        <div className="relative overflow-hidden rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent p-6 sm:rounded-[32px] sm:p-8 md:p-12">
-          <div className="relative z-10 max-w-xl">
-            <span className="text-xs uppercase tracking-[0.4em] text-amber-300 font-semibold">Newsletter</span>
-            <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Stay informed. Stay ahead.
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-zinc-300 sm:mt-4 sm:text-base">
-              Get the day&apos;s top stories across AI, Football, Crypto, Business, Music, and Politics — delivered directly to your inbox.
-            </p>
-            <NewsletterForm />
-          </div>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-amber-400/10 blur-3xl"
-          />
         </div>
       </section>
     </main>
