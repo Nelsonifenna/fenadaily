@@ -31,10 +31,7 @@ export default async function Home() {
       <section className="relative overflow-hidden border-b border-white/8">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
-            <span className="inline-block rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-300">
-              The Daily Briefing
-            </span>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
               Fena Daily
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-300 sm:mt-5 sm:text-lg md:text-xl">
