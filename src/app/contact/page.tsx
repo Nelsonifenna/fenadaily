@@ -53,7 +53,7 @@ const contactTypes = [
   },
   {
     heading: "Advertising",
-    body: "We plan to offer advertising opportunities in the future. If you'd like to reach our audience, get in touch and we'll keep you informed.",
+    body: "Interested in reaching our audience? Get in touch with a brief overview of what you have in mind, and we'll follow up with details on current opportunities.",
   },
 ];
 
