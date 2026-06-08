@@ -39,8 +39,16 @@ export async function getFeaturedStory(): Promise<Article | null> {
   return latest[0] ?? null;
 }
 
+// "Trending" = posts editorially marked sticky (mapped to `trending` on Article);
+// falls back to latest non-trending posts when there aren't enough to fill the slot,
+// mirroring the fallback pattern used by getRelatedArticles.
 export async function getTrendingStories(limit = 6): Promise<Article[]> {
-  return getAllPosts(limit);
+  const posts = await getAllPosts(Math.max(limit * 3, 18));
+  const trending = posts.filter((p) => p.trending);
+  if (trending.length >= limit) return trending.slice(0, limit);
+
+  const fallback = posts.filter((p) => !p.trending);
+  return [...trending, ...fallback].slice(0, limit);
 }
 
 export async function getLatestPosts(limit = 6): Promise<Article[]> {

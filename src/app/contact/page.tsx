@@ -30,12 +30,7 @@ const schema = {
   name: "Contact Fena Daily",
   description: DESC,
   url: `${SITE_URL}/contact`,
-  publisher: {
-    "@type": "Organization",
-    name: "Fena Daily",
-    url: SITE_URL,
-    email: "fenadaily@gmail.com",
-  },
+  publisher: { "@id": `${SITE_URL}/#organization` },
 };
 
 const contactTypes = [

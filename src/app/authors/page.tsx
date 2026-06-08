@@ -33,11 +33,7 @@ const schema = {
   description:
     "The Fena Daily editorial team researches and publishes content across business, technology, AI, finance, careers, and personal development.",
   url: `${SITE_URL}/authors`,
-  worksFor: {
-    "@type": "Organization",
-    name: "Fena Daily",
-    url: SITE_URL,
-  },
+  worksFor: { "@id": `${SITE_URL}/#organization` },
   knowsAbout: [
     "Artificial Intelligence",
     "Business",

@@ -31,11 +31,7 @@ const schema = {
   name: "About Fena Daily",
   description: DESC,
   url: `${SITE_URL}/about`,
-  publisher: {
-    "@type": "Organization",
-    name: "Fena Daily",
-    url: SITE_URL,
-  },
+  publisher: { "@id": `${SITE_URL}/#organization` },
 };
 
 const coverageAreas = [

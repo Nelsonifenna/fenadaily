@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { ArticleCard } from "@/components/ArticleCard";
 import { StoryRow } from "@/components/StoryRow";
 import { ShareSection } from "@/components/ShareSection";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import {
   getArticleBySlug,
@@ -285,15 +284,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               >
                 About the team →
               </Link>
-            </section>
-
-            <section className="rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 via-amber-400/5 to-transparent p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6">
-              <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Newsletter</p>
-              <h3 className="mt-2 text-base font-semibold text-white">Stay informed. Stay ahead.</h3>
-              <p className="mt-1.5 text-sm text-zinc-400">
-                Top stories delivered to your inbox: free, no spam.
-              </p>
-              <NewsletterForm stacked />
             </section>
           </aside>
         </div>
