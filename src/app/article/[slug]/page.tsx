@@ -111,11 +111,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         url: articleUrl,
         datePublished: article.datePublished,
         dateModified: article.dateModified,
-        author: {
-          "@type": "Organization",
-          name: article.author === "Fena Daily" ? "Fena Daily Editorial Team" : article.author,
-          url: `${SITE_URL}/authors`,
-        },
+        author: article.author === "Fena Daily"
+          ? { "@id": `${SITE_URL}/authors#editorial-team` }
+          : {
+              "@type": "Person",
+              name: article.author,
+              url: `${SITE_URL}/authors`,
+            },
         publisher: {
           "@id": `${SITE_URL}/#organization`,
         },

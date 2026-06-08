@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
           </span>
           {type === "site" && (
             <span style={{ fontSize: 22, color: "#9ca3af", lineHeight: 1.5, maxWidth: 700 }}>
-              Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.
+              Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.
             </span>
           )}
         </div>

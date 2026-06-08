@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Fena Daily",
     short_name: "Fena Daily",
     description:
-      "Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.",
+      "Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.",
     start_url: "/",
     display: "standalone",
     background_color: "#020617",

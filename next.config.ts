@@ -22,6 +22,14 @@ const CSP = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  // Next normally issues its own 308 redirect to strip trailing slashes
+  // *before* the proxy runs, which would turn /home/ -> /home -> / into a
+  // two-hop chain. Skipping it lets the proxy redirect /home/ straight to /
+  // in a single hop while every other route's trailing-slash behavior is
+  // unaffected (the proxy calls NextResponse.next() for everything else,
+  // and Next still normalizes those internally during routing).
+  skipTrailingSlashRedirect: true,
+
   images: {
     remotePatterns: [
       {

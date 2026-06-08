@@ -28,7 +28,8 @@ export const metadata: Metadata = {
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Person",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/authors#editorial-team`,
   name: "Fena Daily Editorial Team",
   description:
     "The Fena Daily editorial team researches and publishes content across business, technology, AI, finance, careers, and personal development.",

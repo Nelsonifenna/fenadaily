@@ -35,10 +35,17 @@ export async function generateMetadata({
   const description = getCategoryDescription(slug) || `Browse all ${label} articles on Fena Daily.`;
   const ogImageUrl = `/api/og?title=${encodeURIComponent(label)}&type=category`;
 
+  // Empty categories render a thin "Coming soon" placeholder — keep them out of
+  // the index until they have content, without any manual upkeep. They self-correct
+  // (re-index automatically) the moment the category gets its first article.
+  const posts = await getPostsByCategory(slug, 1);
+  const isEmpty = posts.length === 0;
+
   return {
     title: label,
     description,
     alternates: { canonical: `${SITE_URL}/category/${slug}` },
+    ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: "website",
       url: `${SITE_URL}/category/${slug}`,

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 const SITE_NAME = "Fena Daily";
 const SITE_DESCRIPTION =
-  "Independent coverage of AI, Football, Crypto, Business, Technology, and Personal Growth.";
+  "Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.";
 
 const siteSchema = {
   "@context": "https://schema.org",
@@ -28,8 +28,7 @@ const siteSchema = {
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
       url: SITE_URL,
-      description:
-        "Fena Daily is an independent digital publication covering business, technology, AI, finance, entrepreneurship, personal growth, and global affairs.",
+      description: SITE_DESCRIPTION,
       logo: {
         "@type": "ImageObject",
         "@id": `${SITE_URL}/#logo`,

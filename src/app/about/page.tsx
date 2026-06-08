@@ -4,7 +4,7 @@ import { SocialLinks } from "@/components/SocialLinks";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
 
 const DESC =
-  "Fena Daily is an independent digital publication covering business, technology, AI, finance, entrepreneurship, personal growth, and global affairs.";
+  "Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.";
 
 export const metadata: Metadata = {
   title: "About Us",
