@@ -8,6 +8,7 @@
  */
 
 import sanitizeHtml from "sanitize-html";
+import { decode } from "he";
 
 const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://cms.fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
@@ -147,6 +148,15 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "");
 }
 
+// WordPress's REST API returns title/excerpt text HTML-entity-encoded
+// (e.g. "&#8217;" for a right single quote, "&amp;" for "&"). Titles and
+// excerpts are rendered as plain React text (not dangerouslySetInnerHTML),
+// so without decoding, entities show up literally instead of the
+// punctuation they represent. Strip any markup first, then decode.
+function decodeWpText(html: string): string {
+  return decode(stripHtml(html ?? "")).trim();
+}
+
 function sanitizeAuthor(name: string): string {
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(name.trim())) return "Fena Daily";
   return name;
@@ -155,17 +165,17 @@ function sanitizeAuthor(name: string): string {
 function extractCategoryName(post: WPRawPost): string {
   const terms = post._embedded?.["wp:term"];
   if (Array.isArray(terms) && Array.isArray(terms[0]) && terms[0].length > 0) {
-    return terms[0][0].name;
+    return decodeWpText(terms[0][0].name);
   }
   return "General";
 }
 
 function mapPost(post: WPRawPost) {
-  const rawAuthor = post._embedded?.author?.[0]?.name ?? "Fena Daily";
+  const rawAuthor = decodeWpText(post._embedded?.author?.[0]?.name ?? "Fena Daily");
   return {
     slug:          post.slug,
-    title:         post.title.rendered,
-    excerpt:       stripHtml(post.excerpt?.rendered ?? "").substring(0, 160),
+    title:         decodeWpText(post.title?.rendered ?? ""),
+    excerpt:       decodeWpText(post.excerpt?.rendered ?? "").substring(0, 160),
     category:      extractCategoryName(post),
     readingTime:   calculateReadingTime(post.content?.rendered ?? ""),
     author:        sanitizeAuthor(rawAuthor),
@@ -300,8 +310,8 @@ export async function getAllCategories(): Promise<WPCategory[]> {
     return Array.isArray(cats)
       ? cats.map((c) => ({
           slug:        c.slug,
-          name:        c.name,
-          description: c.description ?? "",
+          name:        decodeWpText(c.name),
+          description: decodeWpText(c.description ?? ""),
           count:       c.count ?? 0,
         }))
       : [];
@@ -366,9 +376,9 @@ export async function getPageBySlug(slug: string): Promise<WPPage | null> {
     return {
       id:      p.id,
       slug:    p.slug,
-      title:   p.title?.rendered   ?? "",
+      title:   decodeWpText(p.title?.rendered ?? ""),
       content: p.content?.rendered ?? "",
-      excerpt: stripHtml(p.excerpt?.rendered ?? ""),
+      excerpt: decodeWpText(p.excerpt?.rendered ?? ""),
     };
   } catch (err) {
     console.error(`[wp] getPageBySlug("${slug}") fetch error — URL: ${url}`, err);
