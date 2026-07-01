@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SocialLinks } from "@/components/SocialLinks";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { CATEGORIES } from "@/lib/categories";
 
 const publicationLinks = [
   { label: "About Us",         href: "/about" },
@@ -11,16 +12,7 @@ const publicationLinks = [
   { label: "Privacy Policy",   href: "/privacy-policy" },
 ];
 
-const categoryLinks = [
-  { label: "AI",             href: "/category/ai" },
-  { label: "Football",       href: "/category/football" },
-  { label: "Crypto",         href: "/category/crypto" },
-  { label: "Business",       href: "/category/business" },
-  { label: "Technology",     href: "/category/technology" },
-  { label: "Personal Growth",href: "/category/personal-growth" },
-  { label: "Music",          href: "/category/music" },
-  { label: "Politics",       href: "/category/politics" },
-];
+const categoryLinks = CATEGORIES.map(({ label, slug }) => ({ label, href: `/category/${slug}` }));
 
 export function Footer() {
   return (

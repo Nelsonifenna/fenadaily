@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SearchForm } from "@/components/SearchForm";
+import { CATEGORIES } from "@/lib/categories";
 
 const SearchIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -19,16 +20,7 @@ const primaryLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-const categoryLinks = [
-  { label: "AI", href: "/category/ai" },
-  { label: "Football", href: "/category/football" },
-  { label: "Crypto", href: "/category/crypto" },
-  { label: "Business", href: "/category/business" },
-  { label: "Technology", href: "/category/technology" },
-  { label: "Personal Growth", href: "/category/personal-growth" },
-  { label: "Music", href: "/category/music" },
-  { label: "Politics", href: "/category/politics" },
-];
+const categoryLinks = CATEGORIES.map(({ label, slug }) => ({ label, href: `/category/${slug}` }));
 
 export function Header() {
   const pathname = usePathname();
@@ -38,12 +30,17 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Close the subscribe / search dropdowns on route change
-  useEffect(() => {
+  // Close the subscribe / search dropdowns on route change. Adjusting state
+  // during render (rather than in an effect) avoids the extra commit + flash
+  // an effect-based reset would cause — this is React's recommended pattern
+  // for state that needs to change in response to a prop/value changing.
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setSubscribeOpen(false);
     setSearchOpen(false);
     setMenuOpen(false);
-  }, [pathname]);
+  }
 
   // Close on outside click
   useEffect(() => {

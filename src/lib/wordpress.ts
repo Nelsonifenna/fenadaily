@@ -9,6 +9,7 @@
 
 import sanitizeHtml from "sanitize-html";
 import { decode } from "he";
+import { CATEGORIES } from "./categories";
 
 const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://cms.fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
@@ -328,20 +329,9 @@ export type CategoryHighlight = {
   description: string;
 };
 
-const NAV_CATEGORIES: { label: string; slug: string }[] = [
-  { label: "AI",              slug: "ai" },
-  { label: "Football",        slug: "football" },
-  { label: "Crypto",          slug: "crypto" },
-  { label: "Business",        slug: "business" },
-  { label: "Technology",      slug: "technology" },
-  { label: "Personal Growth", slug: "personal-growth" },
-  { label: "Music",           slug: "music" },
-  { label: "Politics",        slug: "politics" },
-];
-
 export async function getCategoryHighlights(): Promise<CategoryHighlight[]> {
   const wpCats = await getAllCategories();
-  return NAV_CATEGORIES.map(({ label, slug }) => {
+  return CATEGORIES.map(({ label, slug }) => {
     const match = wpCats.find((c) => c.slug === slug);
     return {
       label,

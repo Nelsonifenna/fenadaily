@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/wordpress";
+import { CATEGORIES } from "@/lib/categories";
 
 export const revalidate = 86400; // regenerate once per day
 
@@ -44,9 +45,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   },
 ];
 
-const CATEGORY_SLUGS = ["ai", "football", "crypto", "business", "technology", "personal-growth", "music", "politics"];
-
-const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) => ({
+const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORIES.map(({ slug }) => ({
   url: `${SITE_URL}/category/${slug}`,
   lastModified: new Date(),
   changeFrequency: "daily" as const,

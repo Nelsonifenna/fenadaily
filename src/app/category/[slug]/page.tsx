@@ -2,25 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleCard } from "@/components/ArticleCard";
 import { getPostsByCategory } from "@/lib/wordpress";
-
-const CATEGORY_META: Record<string, { label: string; description: string }> = {
-  ai:                { label: "AI",              description: "Artificial intelligence, machine learning, and the technology shaping tomorrow." },
-  football:          { label: "Football",        description: "Match analysis, transfers, tactics, and the beautiful game." },
-  crypto:            { label: "Crypto",          description: "Cryptocurrency markets, blockchain, DeFi, and Web3 insights." },
-  business:          { label: "Business",        description: "Entrepreneurship, strategy, markets, and business growth." },
-  technology:        { label: "Technology",      description: "Product launches, software, platforms, and the digital world." },
-  "personal-growth": { label: "Personal Growth", description: "Mindset, habits, productivity, and becoming your best self." },
-  music:             { label: "Music",           description: "New releases, artist spotlights, industry news, and the sounds defining our era." },
-  politics:          { label: "Politics",        description: "Policy, elections, global affairs, and the decisions that shape society." },
-};
+import { CATEGORIES } from "@/lib/categories";
 
 function getCategoryLabel(slug: string): string {
-  return CATEGORY_META[slug]?.label
+  return CATEGORIES.find((c) => c.slug === slug)?.label
     ?? slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function getCategoryDescription(slug: string): string {
-  return CATEGORY_META[slug]?.description ?? "";
+  return CATEGORIES.find((c) => c.slug === slug)?.description ?? "";
 }
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
