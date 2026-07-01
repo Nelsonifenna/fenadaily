@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 const SITE_NAME = "Fena Daily";
 const SITE_DESCRIPTION =
   "Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.";

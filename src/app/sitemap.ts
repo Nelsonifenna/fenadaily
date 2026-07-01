@@ -4,7 +4,7 @@ import { CATEGORIES } from "@/lib/categories";
 
 export const revalidate = 86400; // regenerate once per day
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
   {

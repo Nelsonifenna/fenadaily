@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleCard } from "@/components/ArticleCard";
 import { getLatestPosts } from "@/lib/content";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 const DESC =
   "Meet the Fena Daily editorial team: the researchers and writers behind our coverage of business, technology, AI, finance, and personal development.";
 

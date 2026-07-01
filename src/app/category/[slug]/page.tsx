@@ -13,7 +13,7 @@ function getCategoryDescription(slug: string): string {
   return CATEGORIES.find((c) => c.slug === slug)?.description ?? "";
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
 export async function generateMetadata({
   params,

@@ -12,7 +12,7 @@ export type NewsletterState =
 const OWNER_EMAIL = "fenadaily@gmail.com";
 const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const FROM_EMAIL  = process.env.RESEND_FROM_EMAIL ?? "Fena Daily <onboarding@resend.dev>";
-const SITE_URL    = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL    = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
 type ResendContact = { id: string; email: string; unsubscribed: boolean };
 

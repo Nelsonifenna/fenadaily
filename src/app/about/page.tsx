@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SocialLinks } from "@/components/SocialLinks";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
 const DESC =
   "Independent coverage of AI, Football, Crypto, Business, Technology, Politics, and Personal Growth.";

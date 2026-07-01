@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 const DESC =
   "Fena Daily's Editorial Policy: our commitment to accuracy, fact-checking, corrections, transparency, and editorial independence.";
 

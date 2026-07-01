@@ -4,7 +4,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { SearchForm } from "@/components/SearchForm";
 import { searchArticles } from "@/lib/content";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fenadaily.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
 export const metadata: Metadata = {
   title: "Search",
