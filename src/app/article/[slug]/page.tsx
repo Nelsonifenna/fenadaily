@@ -208,7 +208,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Hero image */}
-            <div className="relative mt-6 h-60 w-full overflow-hidden rounded-xl sm:h-80 sm:rounded-2xl md:h-[26rem] md:rounded-[24px]">
+            <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-xl shadow-xl shadow-black/30 sm:mt-7 sm:rounded-2xl md:rounded-[24px]">
               {article.image ? (
                 <Image
                   src={article.image}
@@ -216,6 +216,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 65vw"
+                  quality={90}
                   priority
                 />
               ) : (
