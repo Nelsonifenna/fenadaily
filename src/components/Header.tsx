@@ -80,7 +80,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-slate-950">
       {/* ── Primary bar ── */}
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 lg:px-8">
@@ -129,7 +129,7 @@ export function Header() {
                 role="dialog"
                 aria-label="Search Fena Daily"
                 aria-modal="false"
-                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900/98 p-4 shadow-2xl shadow-black/60 backdrop-blur-md"
+                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900 p-4 shadow-2xl shadow-black/60"
               >
                 <div
                   aria-hidden
@@ -156,7 +156,7 @@ export function Header() {
                 role="dialog"
                 aria-label="Subscribe to newsletter"
                 aria-modal="false"
-                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900/98 p-5 shadow-2xl shadow-black/60 backdrop-blur-md"
+                className="absolute right-0 top-[calc(100%+10px)] z-50 w-80 rounded-2xl border border-white/10 bg-slate-900 p-5 shadow-2xl shadow-black/60"
               >
                 {/* Caret */}
                 <div

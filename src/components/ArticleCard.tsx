@@ -4,7 +4,7 @@ import type { Article } from "@/lib/content";
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="group flex flex-col rounded-3xl border border-white/10 bg-zinc-950/80 p-4 shadow-2xl shadow-black/20 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/25 hover:shadow-amber-400/5 md:p-5">
+    <article className="group flex flex-col rounded-3xl border border-white/10 bg-zinc-950/80 p-4 shadow-2xl shadow-black/20 transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/25 hover:shadow-amber-400/5 md:p-5">
       <div className="relative mb-4 h-40 w-full overflow-hidden rounded-2xl">
         {article.image ? (
           <Image

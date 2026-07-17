@@ -9,7 +9,7 @@ export function ReadingProgressBar({ targetId }: { targetId: string }) {
     const target = document.getElementById(targetId);
     if (!target) return;
 
-    function update() {
+    function measure() {
       if (!target) return;
       const rect = target.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
@@ -21,7 +21,20 @@ export function ReadingProgressBar({ targetId }: { targetId: string }) {
       setProgress(Math.round((scrolled / total) * 100));
     }
 
-    update();
+    // Fast scrolling on mobile can fire many scroll events per animation
+    // frame; coalesce them to at most one state update (and one repaint)
+    // per frame instead of re-rendering on every event.
+    let ticking = false;
+    function update() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        measure();
+        ticking = false;
+      });
+    }
+
+    measure();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     return () => {
