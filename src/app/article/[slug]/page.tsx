@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArticleCard } from "@/components/ArticleCard";
 import { StoryRow } from "@/components/StoryRow";
@@ -69,20 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const article = await getArticleBySlug(slug);
 
   if (!article) {
-    return (
-      <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-          <h1 className="text-2xl font-semibold sm:text-3xl">Article not found</h1>
-          <p className="mt-4 text-zinc-300">The article you&apos;re looking for could not be found.</p>
-          <Link
-            href="/"
-            className="mt-8 inline-block rounded-full bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-amber-300"
-          >
-            Back to homepage
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const [related, moreFromCategory, latestPosts] = await Promise.all([
