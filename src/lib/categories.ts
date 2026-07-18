@@ -26,3 +26,12 @@ export const CATEGORIES: CategoryDef[] = [
   { slug: "global",          label: "Global",          description: "World news, international affairs, and the stories connecting the globe." },
   { slug: "astrology",       label: "Astrology",       description: "Horoscopes, zodiac insights, and the cosmic trends shaping your week." },
 ];
+
+export function searchCategories(query: string): CategoryDef[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return CATEGORIES.filter(
+    ({ label, description }) =>
+      label.toLowerCase().includes(q) || description.toLowerCase().includes(q)
+  );
+}

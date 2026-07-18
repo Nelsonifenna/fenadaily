@@ -18,6 +18,14 @@ export async function submitContact(
   const email   = formData.get("email")?.toString().trim()   ?? "";
   const message = formData.get("message")?.toString().trim() ?? "";
 
+  // Honeypot: a field real visitors never see or fill, but bots that
+  // auto-fill every input on the form do. Pretend success so bots don't
+  // learn to avoid it, without sending the message anywhere.
+  const honeypot = formData.get("website")?.toString().trim() ?? "";
+  if (honeypot) {
+    return { status: "success" };
+  }
+
   // Server-side validation (defence against JS-disabled clients bypassing required)
   if (!name || !email || !message) {
     return { status: "error", message: "Please fill in all fields." };

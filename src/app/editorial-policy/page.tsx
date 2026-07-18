@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/editorial-policy`,
     title: "Editorial Policy | Fena Daily",
     description: DESC,
+    images: [{ url: `/api/og?title=Editorial+Policy`, width: 1200, height: 630, alt: "Editorial Policy" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Editorial Policy | Fena Daily",
+    description: DESC,
+    images: [`/api/og?title=Editorial+Policy`],
   },
 };
 
@@ -31,9 +38,23 @@ const contentTypes = [
   },
 ];
 
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Editorial Policy",
+  description: DESC,
+  url: `${SITE_URL}/editorial-policy`,
+  publisher: { "@id": `${SITE_URL}/#organization` },
+};
+
 export default function EditorialPolicyPage() {
   return (
-    <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12 lg:px-8 lg:py-16">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/85 p-6 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-8 md:p-12">
           <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Standards</p>
@@ -192,6 +213,7 @@ export default function EditorialPolicyPage() {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

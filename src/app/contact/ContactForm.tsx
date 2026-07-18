@@ -31,6 +31,13 @@ export function ContactForm({ email }: { email: string | null }) {
 
   return (
     <form action={action} className="mt-8 space-y-5" noValidate>
+      {/* Honeypot — hidden from sighted and screen-reader users, only a bot
+          filling every field would populate this. */}
+      <div style={{ position: "absolute", left: "-9999px" }} aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       {/* Error banner */}
       {state.status === "error" && (
         <p role="alert" className="rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-400">

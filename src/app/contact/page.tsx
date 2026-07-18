@@ -86,17 +86,38 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <div className="mt-6 rounded-xl border border-amber-400/20 bg-amber-400/5 px-5 py-3.5">
-              <p className="text-xs text-zinc-400">
-                You can also email us directly at{" "}
-                <a
-                  href="mailto:fenadaily@gmail.com"
-                  className="font-medium text-amber-300 transition-colors hover:text-amber-200"
-                >
-                  fenadaily@gmail.com
-                </a>
-              </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-amber-400/20 bg-amber-400/5 px-5 py-3.5">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Business Email</p>
+                <p className="mt-1.5 text-sm text-zinc-300">
+                  <a
+                    href="mailto:fenadaily@gmail.com"
+                    className="font-medium text-amber-300 transition-colors hover:text-amber-200"
+                  >
+                    fenadaily@gmail.com
+                  </a>
+                </p>
+                <p className="mt-1 text-xs text-zinc-500">General inquiries, partnerships, and advertising.</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/4 px-5 py-3.5">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400">Corrections</p>
+                <p className="mt-1.5 text-sm text-zinc-300">
+                  <a
+                    href="mailto:fenadaily@gmail.com?subject=Correction%20request"
+                    className="font-medium text-amber-300 transition-colors hover:text-amber-200"
+                  >
+                    fenadaily@gmail.com
+                  </a>
+                </p>
+                <p className="mt-1 text-xs text-zinc-500">
+                  Flag an inaccuracy — we review every correction request.
+                </p>
+              </div>
             </div>
+
+            <p className="mt-4 text-xs text-zinc-500">
+              We aim to respond to all messages within <span className="text-zinc-300">48 hours</span>.
+            </p>
 
             {/* Social links */}
             <div className="mt-8 border-t border-white/10 pt-6">

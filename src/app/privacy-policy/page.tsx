@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/privacy-policy`,
     title: "Privacy Policy | Fena Daily",
     description: DESC,
+    images: [{ url: `/api/og?title=Privacy+Policy`, width: 1200, height: 630, alt: "Privacy Policy" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | Fena Daily",
+    description: DESC,
+    images: [`/api/og?title=Privacy+Policy`],
   },
 };
 
@@ -76,14 +83,44 @@ const sections = [
     ),
   },
   {
-    heading: "5. Third-Party Services",
+    heading: "5. Third-Party Services & Advertising",
     content: (
-      <p>
-        We use a small number of third-party services to operate our website, including an email
-        delivery service for our newsletter. These providers process data according to their own
-        privacy policies and only to the extent necessary to deliver the service. We do not sell
-        your data to any third party.
-      </p>
+      <>
+        <p className="mb-3">
+          We use a small number of third-party services to operate our website, including an email
+          delivery service for our newsletter. These providers process data according to their own
+          privacy policies and only to the extent necessary to deliver the service. We do not sell
+          your data to any third party.
+        </p>
+        <p>
+          If we display advertising on this Site — for example, through Google AdSense — Google and
+          its advertising partners may use cookies (including the DoubleClick cookie) to serve ads
+          based on your prior visits to this and other websites. You can learn more about how Google
+          uses this data at{" "}
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-amber-300 transition-colors hover:text-amber-200"
+          >
+            policies.google.com/technologies/partner-sites
+          </a>{" "}
+          and opt out of personalized advertising via{" "}
+          <a
+            href="https://www.aboutads.info/choices/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-amber-300 transition-colors hover:text-amber-200"
+          >
+            aboutads.info/choices
+          </a>
+          . See our{" "}
+          <a href="/cookie-policy" className="text-amber-300 transition-colors hover:text-amber-200">
+            Cookie Policy
+          </a>{" "}
+          for more detail.
+        </p>
+      </>
     ),
   },
   {
@@ -152,9 +189,23 @@ const sections = [
   },
 ];
 
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Privacy Policy",
+  description: DESC,
+  url: `${SITE_URL}/privacy-policy`,
+  publisher: { "@id": `${SITE_URL}/#organization` },
+};
+
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <main className="min-h-screen bg-[linear-gradient(135deg,#08111f_0%,#111827_45%,#020617_100%)] text-white">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12 lg:px-8 lg:py-16">
         <div className="rounded-2xl border border-white/10 bg-zinc-950/85 p-6 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-8 md:p-12">
           <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Legal</p>
@@ -180,6 +231,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

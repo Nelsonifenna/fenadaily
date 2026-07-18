@@ -9,7 +9,14 @@ const publicationLinks = [
   { label: "Search",           href: "/search" },
   { label: "Contact Us",       href: "/contact" },
   { label: "Editorial Policy", href: "/editorial-policy" },
-  { label: "Privacy Policy",   href: "/privacy-policy" },
+];
+
+const legalLinks = [
+  { label: "Privacy Policy",      href: "/privacy-policy" },
+  { label: "Cookie Policy",       href: "/cookie-policy" },
+  { label: "Terms & Conditions",  href: "/terms-and-conditions" },
+  { label: "Disclaimer",          href: "/disclaimer" },
+  { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
 ];
 
 const categoryLinks = CATEGORIES.map(({ label, slug }) => ({ label, href: `/category/${slug}` }));
@@ -38,17 +45,17 @@ export function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
 
           {/* Brand */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/">
               <p className="text-xl font-bold tracking-tight text-white">Fena Daily</p>
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-zinc-400">
               Independent insights on business, technology, AI, finance, personal growth, and the ideas shaping our world.
             </p>
-            <p className="mt-3 text-xs italic text-zinc-600">
+            <p className="mt-3 text-xs italic text-zinc-500">
               Knowledge for curious, ambitious people.
             </p>
             <SocialLinks className="mt-5" />
@@ -91,6 +98,25 @@ export function Footer() {
               ))}
             </ul>
           </div>
+
+          {/* Legal */}
+          <div>
+            <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.35em] text-zinc-500">
+              Legal
+            </p>
+            <ul className="space-y-2.5">
+              {legalLinks.map(({ label, href }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-sm text-zinc-400 transition-colors hover:text-amber-300"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
@@ -101,19 +127,25 @@ export function Footer() {
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             <Link
               href="/privacy-policy"
-              className="text-xs text-zinc-600 transition-colors hover:text-zinc-400"
+              className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
             >
               Privacy Policy
             </Link>
             <Link
-              href="/editorial-policy"
-              className="text-xs text-zinc-600 transition-colors hover:text-zinc-400"
+              href="/terms-and-conditions"
+              className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
             >
-              Editorial Policy
+              Terms & Conditions
+            </Link>
+            <Link
+              href="/cookie-policy"
+              className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
+            >
+              Cookie Policy
             </Link>
             <Link
               href="/contact"
-              className="text-xs text-zinc-600 transition-colors hover:text-zinc-400"
+              className="text-xs text-zinc-500 transition-colors hover:text-zinc-300"
             >
               Contact
             </Link>

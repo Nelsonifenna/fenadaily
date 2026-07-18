@@ -61,13 +61,29 @@ export default async function CategoryPage({
   const label = getCategoryLabel(slug);
   const description = getCategoryDescription(slug);
   const posts = await getPostsByCategory(slug, 24);
+  const categoryUrl = `${SITE_URL}/category/${slug}`;
 
-  const breadcrumbSchema = {
+  // CollectionPage + BreadcrumbList — combined @graph for this listing page
+  const pageSchema = {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: label,   item: `${SITE_URL}/category/${slug}` },
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${categoryUrl}#webpage`,
+        name: `${label} | Fena Daily`,
+        description: description || `Browse all ${label} articles on Fena Daily.`,
+        url: categoryUrl,
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        about: { "@type": "Thing", name: label },
+        inLanguage: "en-US",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: label,   item: categoryUrl },
+        ],
+      },
     ],
   };
 
@@ -75,10 +91,21 @@ export default async function CategoryPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
     <main className="min-h-screen bg-[linear-gradient(160deg,#08111f_0%,#0d1623_50%,#020617_100%)] text-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 lg:px-8 lg:py-14">
+
+        {/* Breadcrumbs */}
+        <nav aria-label="Breadcrumb" className="mb-5">
+          <ol className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+            <li>
+              <Link href="/" className="transition-colors hover:text-zinc-300">Home</Link>
+            </li>
+            <li aria-hidden className="select-none">›</li>
+            <li className="text-zinc-400" aria-current="page">{label}</li>
+          </ol>
+        </nav>
 
         {/* Category header */}
         <div className="rounded-2xl border border-white/10 bg-zinc-950/80 px-5 py-8 shadow-2xl shadow-black/30 sm:rounded-[28px] sm:px-8 sm:py-10 md:px-12">

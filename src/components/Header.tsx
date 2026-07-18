@@ -175,10 +175,11 @@ export function Header() {
 
           {/* Mobile hamburger */}
           <button
-            className="flex flex-col gap-[5px] p-2 md:hidden"
+            className="flex flex-col gap-[5px] rounded-lg p-2 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             <span className={`h-0.5 w-5 bg-white rounded-full transition-all duration-200 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
             <span className={`h-0.5 w-5 bg-white rounded-full transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
@@ -211,7 +212,7 @@ export function Header() {
 
       {/* ── Mobile menu ── */}
       {menuOpen && (
-        <div className="border-b border-white/10 bg-slate-950 md:hidden">
+        <div id="mobile-menu" className="border-b border-white/10 bg-slate-950 md:hidden">
           {/* Search */}
           <div className="px-4 pb-2 pt-4">
             <p className="mb-2 text-[10px] uppercase tracking-[0.35em] text-zinc-500">Search</p>

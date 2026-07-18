@@ -43,6 +43,30 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
     changeFrequency: "yearly",
     priority: 0.3,
   },
+  {
+    url: `${SITE_URL}/cookie-policy`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
+  {
+    url: `${SITE_URL}/terms-and-conditions`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
+  {
+    url: `${SITE_URL}/disclaimer`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
+  {
+    url: `${SITE_URL}/affiliate-disclosure`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  },
 ];
 
 const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORIES.map(({ slug }) => ({

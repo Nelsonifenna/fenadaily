@@ -3,6 +3,9 @@ import Link from "next/link";
 import { ArticleCard } from "@/components/ArticleCard";
 import { SearchForm } from "@/components/SearchForm";
 import { searchArticles } from "@/lib/content";
+import { searchCategories } from "@/lib/categories";
+
+const AUTHOR_QUERY_PATTERN = /fena\s*daily|editorial|author|team|writer|journalist/i;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
@@ -21,6 +24,9 @@ export default async function SearchPage({
   const { q } = await searchParams;
   const query = (q ?? "").trim();
   const results = query ? await searchArticles(query, 24) : [];
+  const matchedCategories = query ? searchCategories(query) : [];
+  const matchedAuthors = query ? AUTHOR_QUERY_PATTERN.test(query) : false;
+  const hasAnyResults = results.length > 0 || matchedCategories.length > 0 || matchedAuthors;
 
   return (
     <main className="min-h-screen bg-[linear-gradient(160deg,#08111f_0%,#0d1623_50%,#020617_100%)] text-white">
@@ -44,16 +50,65 @@ export default async function SearchPage({
           ) : (
             <>
               <p className="mb-5 text-sm text-zinc-400 sm:mb-6">
-                {results.length > 0
-                  ? <>Showing <span className="font-semibold text-white">{results.length}</span> result{results.length === 1 ? "" : "s"} for &ldquo;<span className="text-amber-300">{query}</span>&rdquo;</>
+                {hasAnyResults
+                  ? <>Showing results for &ldquo;<span className="text-amber-300">{query}</span>&rdquo;</>
                   : <>No results for &ldquo;<span className="text-amber-300">{query}</span>&rdquo;</>}
               </p>
 
-              {results.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-                  {results.map((article) => (
-                    <ArticleCard key={article.slug} article={article} />
-                  ))}
+              {hasAnyResults ? (
+                <div className="space-y-8">
+                  {/* Matching topics */}
+                  {matchedCategories.length > 0 && (
+                    <section>
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">Topics</p>
+                      <div className="flex flex-wrap gap-2">
+                        {matchedCategories.map(({ label, slug }) => (
+                          <Link
+                            key={slug}
+                            href={`/category/${slug}`}
+                            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-200 transition-colors hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-200"
+                          >
+                            {label}
+                          </Link>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Matching authors */}
+                  {matchedAuthors && (
+                    <section>
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">Authors</p>
+                      <Link
+                        href="/authors"
+                        className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200 transition-colors hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-200 sm:max-w-sm"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-xs font-bold text-amber-300">
+                          FD
+                        </span>
+                        <span>
+                          <span className="block font-medium">Fena Daily Editorial Team</span>
+                          <span className="block text-xs text-zinc-500">View author profile</span>
+                        </span>
+                      </Link>
+                    </section>
+                  )}
+
+                  {/* Matching articles */}
+                  {results.length > 0 && (
+                    <section>
+                      {(matchedCategories.length > 0 || matchedAuthors) && (
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">
+                          Articles ({results.length})
+                        </p>
+                      )}
+                      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+                        {results.map((article) => (
+                          <ArticleCard key={article.slug} article={article} />
+                        ))}
+                      </div>
+                    </section>
+                  )}
                 </div>
               ) : (
                 <div className="rounded-2xl border border-white/10 bg-zinc-950/70 px-5 py-12 text-center sm:rounded-[28px] sm:px-8 sm:py-16">
