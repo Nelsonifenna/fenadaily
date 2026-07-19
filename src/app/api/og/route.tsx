@@ -100,6 +100,13 @@ export async function GET(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      headers: {
+        // Output is a pure function of the query string, so it can be cached
+        // at the edge indefinitely — this also means repeated/scripted hits
+        // to this endpoint get served from cache instead of re-invoking the
+        // (comparatively expensive) image renderer each time.
+        "Cache-Control": "public, immutable, max-age=31536000",
+      },
     }
   );
 }

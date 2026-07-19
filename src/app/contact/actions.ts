@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export type ContactState =
   | { status: "idle" }
@@ -24,6 +25,11 @@ export async function submitContact(
   const honeypot = formData.get("website")?.toString().trim() ?? "";
   if (honeypot) {
     return { status: "success" };
+  }
+
+  const ip = await getClientIp();
+  if (!rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000)) {
+    return { status: "error", message: "Too many messages sent. Please try again in a few minutes." };
   }
 
   // Server-side validation (defence against JS-disabled clients bypassing required)

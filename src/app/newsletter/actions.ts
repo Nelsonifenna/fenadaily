@@ -3,6 +3,7 @@
 import { Resend } from "resend";
 import { generateUnsubscribeToken } from "@/lib/unsubscribe";
 import { buildWelcomeEmail } from "@/lib/welcome-email";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export type NewsletterState =
   | { status: "idle" }
@@ -44,6 +45,11 @@ export async function subscribeNewsletter(
   }
   if (email.length > 254 || !EMAIL_RE.test(email)) {
     return { status: "error", message: "Please enter a valid email address." };
+  }
+
+  const ip = await getClientIp();
+  if (!rateLimit(`newsletter:${ip}`, 5, 10 * 60 * 1000)) {
+    return { status: "error", message: "Too many attempts. Please try again in a few minutes." };
   }
 
   const apiKey = process.env.RESEND_API_KEY;
