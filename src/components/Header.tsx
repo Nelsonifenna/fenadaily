@@ -16,6 +16,7 @@ const SearchIcon = () => (
 
 const primaryLinks = [
   { label: "Home", href: "/" },
+  { label: "Football", href: "/football" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

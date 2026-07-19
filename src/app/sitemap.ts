@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/wordpress";
 import { CATEGORIES } from "@/lib/categories";
+import { getSitemapMatches } from "@/football/content";
+import { COMPETITIONS } from "@/football/competitions";
 
 export const revalidate = 86400; // regenerate once per day
 
@@ -67,6 +69,24 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
     changeFrequency: "yearly",
     priority: 0.3,
   },
+  {
+    url: `${SITE_URL}/football`,
+    lastModified: new Date(),
+    changeFrequency: "hourly",
+    priority: 0.8,
+  },
+  {
+    url: `${SITE_URL}/football/live`,
+    lastModified: new Date(),
+    changeFrequency: "always",
+    priority: 0.6,
+  },
+  {
+    url: `${SITE_URL}/football/today`,
+    lastModified: new Date(),
+    changeFrequency: "hourly",
+    priority: 0.7,
+  },
 ];
 
 const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORIES.map(({ slug }) => ({
@@ -76,8 +96,20 @@ const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORIES.map(({ slug }) => ({
   priority: 0.8,
 }));
 
+// Football module — isolated feature, see src/football/. Its own data layer
+// (getSitemapMatches) already handles a missing/unreachable provider by
+// returning an empty array, so this can never break sitemap generation for
+// the rest of the site.
+const FOOTBALL_COMPETITION_ROUTES: MetadataRoute.Sitemap = COMPETITIONS.map(({ slug }) => ({
+  url: `${SITE_URL}/football/competition/${slug}`,
+  lastModified: new Date(),
+  changeFrequency: "daily" as const,
+  priority: 0.6,
+}));
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let articleRoutes: MetadataRoute.Sitemap = [];
+  let footballMatchRoutes: MetadataRoute.Sitemap = [];
 
   try {
     const posts = await getAllPosts(100);
@@ -91,5 +123,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If WordPress is unreachable at build time, sitemap still generates without articles
   }
 
-  return [...STATIC_ROUTES, ...CATEGORY_ROUTES, ...articleRoutes];
+  const matches = await getSitemapMatches();
+  footballMatchRoutes = matches.map((m) => ({
+    url: `${SITE_URL}/football/watch/${m.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "hourly" as const,
+    priority: 0.65,
+  }));
+
+  return [
+    ...STATIC_ROUTES,
+    ...CATEGORY_ROUTES,
+    ...articleRoutes,
+    ...FOOTBALL_COMPETITION_ROUTES,
+    ...footballMatchRoutes,
+  ];
 }

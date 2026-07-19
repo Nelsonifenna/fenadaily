@@ -5,6 +5,7 @@ import { CATEGORIES } from "@/lib/categories";
 
 const publicationLinks = [
   { label: "About Us",         href: "/about" },
+  { label: "Football",         href: "/football" },
   { label: "Authors",          href: "/authors" },
   { label: "Search",           href: "/search" },
   { label: "Contact Us",       href: "/contact" },
