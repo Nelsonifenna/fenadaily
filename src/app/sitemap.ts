@@ -4,7 +4,14 @@ import { CATEGORIES } from "@/lib/categories";
 import { getSitemapMatches } from "@/football/content";
 import { COMPETITIONS } from "@/football/competitions";
 
-export const revalidate = 86400; // regenerate once per day
+// Primary freshness mechanism is on-demand: POST /api/revalidate (called by
+// a WordPress publish webhook, see docs/wordpress-revalidate-webhook.md)
+// calls revalidatePath("/sitemap.xml") the instant a post is published, so
+// new articles normally appear within seconds. This time-based value is
+// only the worst-case fallback if that webhook is ever missed or misfires —
+// it was previously 86400 (24h), which is how a real published article sat
+// out of the sitemap for a full day with nothing broken except the wait.
+export const revalidate = 3600; // 1 hour fallback — see comment above
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
