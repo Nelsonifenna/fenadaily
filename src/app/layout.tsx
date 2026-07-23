@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -122,24 +121,32 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/*
+          Google AdSense site-verification script. Deliberately a plain
+          <script> tag, not next/script — next/script's `beforeInteractive`
+          strategy (tried first) doesn't render this as a literal tag in
+          <head>; in this Next.js version it emits a `self.__next_s.push(...)`
+          bootstrap call placed in <body>, which Google's AdSense
+          verification crawler does not reliably detect when it scans the
+          raw HTML for the exact snippet. A plain <script> here is rendered
+          by React exactly where it's written, so it appears verbatim inside
+          <head> in the initial server response — matching Google's
+          "paste between <head></head>" instruction literally. Only one
+          instance exists site-wide, via the root layout. No manual ad
+          slots are added here — Auto Ads places units automatically once
+          the account is approved.
+        */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6138950676801278"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-slate-950 text-white">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
-        />
-        {/*
-          Google AdSense (Auto Ads) — loaded once, site-wide, via the root
-          layout so every route gets exactly one instance. `afterInteractive`
-          is Next.js's documented strategy for this class of script: it loads
-          after the page has hydrated rather than blocking initial render, so
-          it doesn't affect FCP/LCP. No manual ad slots are defined here —
-          Auto Ads places units automatically once the account is approved.
-        */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6138950676801278"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
         <Header />
         <div className="flex-1">{children}</div>
