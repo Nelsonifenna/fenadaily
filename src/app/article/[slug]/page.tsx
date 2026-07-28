@@ -6,6 +6,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { StoryRow } from "@/components/StoryRow";
 import { ShareSection } from "@/components/ShareSection";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
+import { AuthorByline } from "@/components/AuthorByline";
 import {
   getArticleBySlug,
   getRelatedArticles,
@@ -13,6 +14,7 @@ import {
   getLatestPosts,
   categoryToSlug,
 } from "@/lib/content";
+import { getAuthorBySlug, getDefaultAuthor, getAuthorXHandle, authorPhotoExists } from "@/lib/authors";
 
 export const revalidate = 1800;
 
@@ -34,6 +36,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ? [{ url: article.image, width: 1200, height: 630, alt: article.title }]
     : [{ url: `/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}&type=article`, width: 1200, height: 630, alt: article.title }];
 
+  const author = getAuthorBySlug(article.authorSlug) ?? getDefaultAuthor();
+  const authorXHandle = getAuthorXHandle(author);
+
   return {
     title: article.title,
     description: article.excerpt,
@@ -50,7 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       images: ogImage,
       publishedTime: article.datePublished,   // ISO 8601
       modifiedTime: article.dateModified,     // ISO 8601
-      authors: [article.author],
+      authors: [`${SITE_URL}/author/${article.authorSlug}`],
       tags: [article.category],
       locale: "en_US",
     },
@@ -60,7 +65,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: article.excerpt,
       images: ogImage.map((i) => i.url),
       site: "@fenadaily",
-      creator: "@fenadaily",
+      creator: authorXHandle ?? "@fenadaily",
     },
   };
 }
@@ -86,6 +91,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const articleUrl = `${SITE_URL}/article/${slug}`;
   const imageUrl = article.image
     || `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}&type=article`;
+  const author = getAuthorBySlug(article.authorSlug);
+  const authorUrl = `${SITE_URL}/author/${article.authorSlug}`;
+  const authorHasPhoto = authorPhotoExists(author);
 
   // NewsArticle + BreadcrumbList — combined @graph for this page
   const pageSchema = {
@@ -99,13 +107,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         url: articleUrl,
         datePublished: article.datePublished,
         dateModified: article.dateModified,
-        author: article.author === "Fena Daily"
-          ? { "@id": `${SITE_URL}/authors#editorial-team` }
-          : {
-              "@type": "Person",
-              name: article.author,
-              url: `${SITE_URL}/authors`,
-            },
+        author: {
+          "@type": "Person",
+          "@id": `${authorUrl}#person`,
+          name: article.author,
+          url: authorUrl,
+          ...(authorHasPhoto ? { image: `${SITE_URL}${author.photo}` } : {}),
+        },
         publisher: {
           "@id": `${SITE_URL}/#organization`,
         },
@@ -188,7 +196,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300 sm:text-lg">{article.excerpt}</p>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 border-y border-white/10 py-3 text-sm text-zinc-300">
-              <span className="font-semibold text-white">{article.author}</span>
+              <AuthorByline authorName={article.author} authorSlug={article.authorSlug} />
               <span className="text-zinc-600">·</span>
               <time dateTime={article.datePublished}>{article.publishedAt}</time>
               <span className="text-zinc-600">·</span>
@@ -258,22 +266,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
             <section className="rounded-2xl border border-white/10 bg-zinc-950/85 p-5 shadow-2xl shadow-black/30 sm:rounded-[32px] sm:p-6 md:p-8">
               <p className="text-xs uppercase tracking-[0.35em] text-amber-300">Author</p>
-              <div className="mt-3 flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-sm font-bold text-amber-300">
-                  {article.author.slice(0, 2).toUpperCase()}
-                </div>
+              <Link href={`/author/${author.slug}`} className="mt-3 flex items-center gap-3 group">
+                {authorHasPhoto ? (
+                  <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
+                    <Image src={author.photo} alt={author.name} fill sizes="44px" className="object-cover" />
+                  </div>
+                ) : (
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-sm font-bold text-amber-300">
+                    {article.author.slice(0, 2).toUpperCase()}
+                  </div>
+                )}
                 <div>
-                  <h3 className="text-base font-semibold text-white">{article.author}</h3>
-                  <p className="text-xs text-zinc-500">
-                    Published <time dateTime={article.datePublished}>{article.publishedAt}</time>
-                  </p>
+                  <h3 className="text-base font-semibold text-white transition-colors group-hover:text-amber-200">{article.author}</h3>
+                  <p className="text-xs text-zinc-500">{author.jobTitle}</p>
                 </div>
-              </div>
+              </Link>
+              <p className="mt-3 text-xs text-zinc-500">
+                Published <time dateTime={article.datePublished}>{article.publishedAt}</time>
+              </p>
               <Link
-                href="/authors"
+                href={`/author/${author.slug}`}
                 className="mt-4 inline-block text-xs font-medium text-amber-400 transition-colors hover:text-amber-300"
               >
-                About the team →
+                View full profile →
               </Link>
             </section>
           </aside>

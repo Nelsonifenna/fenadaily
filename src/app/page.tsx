@@ -101,7 +101,10 @@ export default async function Home() {
                 </p>
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                   <span className="text-sm text-zinc-400">
-                    {featuredStory.author} · {featuredStory.readingTime}
+                    <Link href={`/author/${featuredStory.authorSlug}`} className="transition-colors hover:text-amber-300">
+                      {featuredStory.author}
+                    </Link>{" "}
+                    · {featuredStory.readingTime}
                   </span>
                   <Link
                     href={`/article/${featuredStory.slug}`}

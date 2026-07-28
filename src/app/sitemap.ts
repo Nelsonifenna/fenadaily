@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/wordpress";
 import { CATEGORIES } from "@/lib/categories";
+import { AUTHORS } from "@/lib/authors";
 import { getSitemapMatches } from "@/football/content";
 import { COMPETITIONS } from "@/football/competitions";
 
@@ -103,6 +104,13 @@ const CATEGORY_ROUTES: MetadataRoute.Sitemap = CATEGORIES.map(({ slug }) => ({
   priority: 0.8,
 }));
 
+const AUTHOR_ROUTES: MetadataRoute.Sitemap = AUTHORS.map(({ slug }) => ({
+  url: `${SITE_URL}/author/${slug}`,
+  lastModified: new Date(),
+  changeFrequency: "weekly" as const,
+  priority: 0.6,
+}));
+
 // Football module — isolated feature, see src/football/. Its own data layer
 // (getSitemapMatches) already handles a missing/unreachable provider by
 // returning an empty array, so this can never break sitemap generation for
@@ -141,6 +149,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...STATIC_ROUTES,
     ...CATEGORY_ROUTES,
+    ...AUTHOR_ROUTES,
     ...articleRoutes,
     ...FOOTBALL_COMPETITION_ROUTES,
     ...footballMatchRoutes,

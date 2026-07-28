@@ -21,6 +21,7 @@ export type Article = {
   category:      string;
   readingTime:   string;
   author:        string;
+  authorSlug:    string; // links a byline to /author/[authorSlug]
   datePublished: string; // ISO 8601 — use for structured data and OG publishedTime
   dateModified:  string; // ISO 8601 — use for structured data
   publishedAt:   string; // Human-readable display date
@@ -100,6 +101,16 @@ export async function getMoreFromCategory(category: string, excludeSlug: string,
 
 export async function searchArticles(query: string, limit = 20): Promise<Article[]> {
   return searchPosts(query, limit);
+}
+
+// Powers /author/[slug] — every article whose resolved author (see
+// src/lib/authors.ts) matches this slug. Fetches the full post list rather
+// than querying WordPress by author ID so it naturally includes posts
+// migrated to this author by the registry's default-fallback, not just ones
+// explicitly published under a matching WordPress user.
+export async function getArticlesByAuthor(authorSlug: string, limit = 100): Promise<Article[]> {
+  const posts = await getAllPosts(limit);
+  return posts.filter((p) => p.authorSlug === authorSlug);
 }
 
 // ── Categories ─────────────────────────────────────────────────────────────

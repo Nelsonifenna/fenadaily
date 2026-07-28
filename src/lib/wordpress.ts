@@ -10,6 +10,7 @@
 import sanitizeHtml from "sanitize-html";
 import { decode } from "he";
 import { CATEGORIES } from "./categories";
+import { resolveAuthorSlug, getAuthorBySlug, getDefaultAuthor } from "./authors";
 
 const WORDPRESS_URL = (process.env.WORDPRESS_URL ?? "https://cms.fenadaily.com").replace(/\/+$/, "");
 const WP_API = `${WORDPRESS_URL}/wp-json/wp/v2`;
@@ -158,11 +159,6 @@ function decodeWpText(html: string): string {
   return decode(stripHtml(html ?? "")).trim();
 }
 
-function sanitizeAuthor(name: string): string {
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(name.trim())) return "Fena Daily";
-  return name;
-}
-
 function extractCategoryName(post: WPRawPost): string {
   const terms = post._embedded?.["wp:term"];
   if (Array.isArray(terms) && Array.isArray(terms[0]) && terms[0].length > 0) {
@@ -172,14 +168,22 @@ function extractCategoryName(post: WPRawPost): string {
 }
 
 function mapPost(post: WPRawPost) {
-  const rawAuthor = decodeWpText(post._embedded?.author?.[0]?.name ?? "Fena Daily");
+  // Every article is attributed via the author registry (src/lib/authors.ts),
+  // never WordPress's raw author field directly — this is what migrates
+  // every existing post (and defaults every future one) to the resolved
+  // author without editing WordPress, and guarantees a placeholder like
+  // "Admin" can never surface on a public page.
+  const rawAuthor = decodeWpText(post._embedded?.author?.[0]?.name ?? "");
+  const authorSlug = resolveAuthorSlug(rawAuthor);
+  const author = getAuthorBySlug(authorSlug) ?? getDefaultAuthor();
   return {
     slug:          post.slug,
     title:         decodeWpText(post.title?.rendered ?? ""),
     excerpt:       decodeWpText(post.excerpt?.rendered ?? "").substring(0, 160),
     category:      extractCategoryName(post),
     readingTime:   calculateReadingTime(post.content?.rendered ?? ""),
-    author:        sanitizeAuthor(rawAuthor),
+    author:        author.name,
+    authorSlug:    author.slug,
     datePublished: post.date,                          // ISO 8601 — for structured data & OG
     dateModified:  post.modified ?? post.date,         // ISO 8601 — for structured data
     publishedAt:   new Date(post.date).toLocaleDateString("en-US", {

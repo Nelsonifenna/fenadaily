@@ -24,7 +24,12 @@ export function ArticleCard({ article }: { article: Article }) {
       </h3>
       <p className="mt-2 line-clamp-3 text-sm text-zinc-300">{article.excerpt}</p>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-y-1 text-xs text-zinc-400">
-        <span>{article.author}</span>
+        <Link
+          href={`/author/${article.authorSlug}`}
+          className="transition-colors hover:text-amber-300"
+        >
+          {article.author}
+        </Link>
         <span>{article.readingTime}</span>
       </div>
       <Link
