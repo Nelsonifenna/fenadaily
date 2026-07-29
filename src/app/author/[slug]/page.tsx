@@ -73,10 +73,6 @@ export default async function AuthorPage({ params }: { params: Promise<Params> }
 
   const categoriesCovered = Array.from(new Set(articles.map((a) => a.category)));
   const latestArticle = articles[0];
-  const earliestArticle = articles[articles.length - 1];
-  const yearsWriting = earliestArticle
-    ? Math.max(1, new Date().getFullYear() - new Date(earliestArticle.datePublished).getFullYear() + 1)
-    : 1;
 
   const latestSix = articles.slice(0, 6);
   const remaining = articles.slice(6);
@@ -85,7 +81,7 @@ export default async function AuthorPage({ params }: { params: Promise<Params> }
     { label: "Articles Published", value: String(articles.length) },
     { label: "Categories Covered", value: String(categoriesCovered.length) },
     { label: "Latest Article", value: latestArticle?.publishedAt ?? "—" },
-    { label: "Years Writing", value: `${yearsWriting}+` },
+    { label: "Years Writing", value: `${author.yearsWriting}+` },
   ];
 
   const pageSchema = {

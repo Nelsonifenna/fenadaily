@@ -21,6 +21,10 @@ export type AuthorProfile = {
   photo: string;
   email: string;
   social: AuthorSocialLink[];
+  /** Shown as "{n}+" in the author page's stats row. Editorial/career
+   *  experience, not derived from on-site article history (which would
+   *  understate it for a founder writing before the site's first post). */
+  yearsWriting: number;
 };
 
 export const AUTHORS: AuthorProfile[] = [
@@ -36,6 +40,7 @@ export const AUTHORS: AuthorProfile[] = [
       "digital world.",
     photo: "/authors/nelson-joseph.jpg",
     email: "nelsonjoseph1878@gmail.com",
+    yearsWriting: 4,
     social: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/nelsonjosep", icon: "linkedin" },
       { label: "GitHub",   href: "https://github.com/Nelsonifenna",         icon: "github" },
