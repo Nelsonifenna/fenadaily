@@ -214,6 +214,53 @@ export async function getAllPosts(limit = 20) {
   }
 }
 
+// Used by the sitemap only. getAllPosts(limit) is a single request capped at
+// WordPress's own per_page ceiling of 100 — fine for pages that intentionally
+// want just "the latest N" (homepage, category listings), but the sitemap
+// needs *every* published post regardless of how many there are. This walks
+// every page WordPress reports via X-WP-TotalPages so a post never silently
+// drops out of the sitemap purely because the site passed 100 articles.
+export async function getAllPostsForSitemap() {
+  const perPage = 100;
+  const baseUrl = `${WP_API}/posts?per_page=${perPage}&_embed=author,wp:featuredmedia,wp:term&orderby=date&order=desc`;
+
+  try {
+    const firstRes = await wpFetch(`${baseUrl}&page=1`, { next: { revalidate: REVALIDATE_POSTS } });
+    if (!firstRes.ok) {
+      console.error(`[wp] getAllPostsForSitemap page 1 failed — ${firstRes.status} ${firstRes.statusText}`);
+      return [];
+    }
+
+    const firstPage: WPRawPost[] = await firstRes.json();
+    const allPosts: WPRawPost[] = Array.isArray(firstPage) ? [...firstPage] : [];
+
+    // Safety cap (50 pages = up to 5,000 posts) guards against an endless
+    // loop if WordPress ever reports a bogus X-WP-TotalPages value.
+    const totalPages = Math.min(Number(firstRes.headers.get("X-WP-TotalPages")) || 1, 50);
+
+    if (totalPages > 1) {
+      const remainingPages = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, i) => i + 2).map((page) =>
+          wpFetch(`${baseUrl}&page=${page}`, { next: { revalidate: REVALIDATE_POSTS } })
+        )
+      );
+      for (const res of remainingPages) {
+        if (!res.ok) {
+          console.error(`[wp] getAllPostsForSitemap pagination request failed — ${res.status} ${res.statusText}`);
+          continue;
+        }
+        const pagePosts: WPRawPost[] = await res.json();
+        if (Array.isArray(pagePosts)) allPosts.push(...pagePosts);
+      }
+    }
+
+    return allPosts.map(mapPost);
+  } catch (err) {
+    console.error("[wp] getAllPostsForSitemap fetch error:", err);
+    return [];
+  }
+}
+
 export async function getFeaturedPosts(limit = 3) {
   const url = `${WP_API}/posts?sticky=true&per_page=${limit}&_embed=author,wp:featuredmedia,wp:term`;
   try {

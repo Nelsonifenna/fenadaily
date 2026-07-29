@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/wordpress";
+import { getAllPostsForSitemap } from "@/lib/wordpress";
 import { CATEGORIES } from "@/lib/categories";
 import { AUTHORS } from "@/lib/authors";
 import { getSitemapMatches } from "@/football/content";
@@ -9,10 +9,12 @@ import { COMPETITIONS } from "@/football/competitions";
 // a WordPress publish webhook, see docs/wordpress-revalidate-webhook.md)
 // calls revalidatePath("/sitemap.xml") the instant a post is published, so
 // new articles normally appear within seconds. This time-based value is
-// only the worst-case fallback if that webhook is ever missed or misfires —
-// it was previously 86400 (24h), which is how a real published article sat
-// out of the sitemap for a full day with nothing broken except the wait.
-export const revalidate = 3600; // 1 hour fallback — see comment above
+// only the worst-case fallback if that webhook is missing or misfires — it
+// was previously 86400 (24h), then 3600 (1h). It's now set to match
+// REVALIDATE_POSTS (src/lib/wordpress.ts), the underlying WordPress fetch's
+// own cache lifetime: setting this any lower would still be capped by that
+// fetch not returning fresher data more often than every 30 minutes anyway.
+export const revalidate = 1800; // 30 min fallback — see comment above
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.fenadaily.com";
 
@@ -127,10 +129,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let footballMatchRoutes: MetadataRoute.Sitemap = [];
 
   try {
-    const posts = await getAllPosts(100);
+    // Paginates through every published post (see getAllPostsForSitemap),
+    // not just the most recent 100, and uses each post's real modified date
+    // rather than the moment the sitemap happened to regenerate — Google
+    // uses lastmod to judge whether a URL actually changed since its last
+    // crawl, so a value that's always "now" is misleading rather than helpful.
+    const posts = await getAllPostsForSitemap();
     articleRoutes = posts.map((post) => ({
       url: `${SITE_URL}/article/${post.slug}`,
-      lastModified: new Date(),
+      lastModified: new Date(post.dateModified),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     }));
