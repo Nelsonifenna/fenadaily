@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArticleCard } from "@/components/ArticleCard";
 import { SearchForm } from "@/components/SearchForm";
 import { searchArticles } from "@/lib/content";
 import { searchCategories } from "@/lib/categories";
+import { getDefaultAuthor, authorPhotoExists } from "@/lib/authors";
+
+function initials(name: string): string {
+  return name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+}
 
 const AUTHOR_QUERY_PATTERN = /fena\s*daily|editorial|author|team|writer|journalist/i;
 
@@ -27,6 +33,8 @@ export default async function SearchPage({
   const matchedCategories = query ? searchCategories(query) : [];
   const matchedAuthors = query ? AUTHOR_QUERY_PATTERN.test(query) : false;
   const hasAnyResults = results.length > 0 || matchedCategories.length > 0 || matchedAuthors;
+  const author = getDefaultAuthor();
+  const hasPhoto = authorPhotoExists(author);
 
   return (
     <main className="min-h-screen bg-[linear-gradient(160deg,#08111f_0%,#0d1623_50%,#020617_100%)] text-white">
@@ -80,14 +88,20 @@ export default async function SearchPage({
                     <section>
                       <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">Authors</p>
                       <Link
-                        href="/authors"
+                        href={`/author/${author.slug}`}
                         className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-200 transition-colors hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-200 sm:max-w-sm"
                       >
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-xs font-bold text-amber-300">
-                          FD
-                        </span>
+                        {hasPhoto ? (
+                          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
+                            <Image src={author.photo} alt={author.name} fill sizes="36px" className="object-cover" />
+                          </div>
+                        ) : (
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-xs font-bold text-amber-300">
+                            {initials(author.name)}
+                          </span>
+                        )}
                         <span>
-                          <span className="block font-medium">Fena Daily Editorial Team</span>
+                          <span className="block font-medium">{author.name}</span>
                           <span className="block text-xs text-zinc-500">View author profile</span>
                         </span>
                       </Link>
