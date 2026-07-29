@@ -91,7 +91,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const articleUrl = `${SITE_URL}/article/${slug}`;
   const imageUrl = article.image
     || `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}&type=article`;
-  const author = getAuthorBySlug(article.authorSlug);
+  const author = getAuthorBySlug(article.authorSlug) ?? getDefaultAuthor();
   const authorUrl = `${SITE_URL}/author/${article.authorSlug}`;
   const authorHasPhoto = authorPhotoExists(author);
 
