@@ -39,17 +39,15 @@ add_action('transition_post_status', function ($new_status, $old_status, $post) 
         return;
     }
 
-    $categories = get_the_category($post->ID);
-    $category_slug = !empty($categories) ? $categories[0]->slug : null;
-
     wp_remote_post('https://www.fenadaily.com/api/revalidate?secret=REPLACE_WITH_REVALIDATE_SECRET', [
         'timeout'  => 5,
         'blocking' => false, // fire-and-forget — never slow down the WP save
         'headers'  => ['Content-Type' => 'application/json'],
-        'body'     => wp_json_encode([
-            'slug'     => $post->post_name,
-            'category' => $category_slug,
-        ]),
+        // Only the slug is needed — the endpoint refreshes every category
+        // and author page unconditionally on every call (they're a small,
+        // fixed set), so there's no need to tell it which category this
+        // post belongs to.
+        'body'     => wp_json_encode(['slug' => $post->post_name]),
     ]);
 }, 10, 3);
 ```
@@ -80,7 +78,9 @@ only re-queried WordPress) once every 24 hours, with nothing to tell it a
 new article existed sooner. Shortening that window helps but still leaves a
 real gap. This webhook removes the gap entirely — the site's cache is
 invalidated by the actual publish event, not by a timer guessing when one
-might have happened. The shortened `revalidate = 3600` fallback in
-`sitemap.ts` still exists as a safety net for the case where WordPress can't
-reach `/api/revalidate` (network hiccup, webhook misconfigured), so the
-worst case is bounded at 1 hour instead of 24.
+might have happened. The `revalidate = 1800` (30 min) fallback in
+`sitemap.ts` — matching `REVALIDATE_POSTS` in `src/lib/wordpress.ts`, which
+governs the homepage and category pages too — still exists as a safety net
+for the case where WordPress can't reach `/api/revalidate` (network hiccup,
+webhook not installed), so the worst case is bounded at 30 minutes, not 24
+hours, even with zero WordPress-side configuration.
